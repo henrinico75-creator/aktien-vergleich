@@ -129,6 +129,14 @@
     applyFilter();
   });
 
+  /* ---------------------------------------------------------------- Startseite: Sprung in die Suche */
+  document.querySelectorAll("[data-jump-search]").forEach(function (link) {
+    link.addEventListener("click", function () {
+      var target = document.querySelector((link.getAttribute("href") || "") + " [data-filter-search]");
+      if (target) setTimeout(function () { target.focus({ preventScroll: true }); }, 350);
+    });
+  });
+
   /* ---------------------------------------------------------------- Ergebnis-Panel: Ordervolumen umschalten */
   (function resultSizes() {
     var panel = document.querySelector("[data-result]");

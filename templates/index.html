@@ -4,20 +4,140 @@
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/">{% endblock %}
 
 {% block content %}
-<section class="hero">
-  <h1>{{ cfg.tagline }}</h1>
-  <p class="lede">
-    Für jede Aktie und jeden ETF eine Seite mit dem Kostenvergleich über
-    {{ overview|length }} Aktien, {{ etf_overview|length }} ETFs und
-    {{ brokers|length }} Broker. Dazu Kennzahlen, Dividenden und aktuelle
-    Aussagen des Managements.
-  </p>
-  <p class="hero-note">
-    Beispiel: Einmalkauf über 1.000 EUR ist derzeit bei
-    <strong>{{ cheapest.broker.name }}</strong> am günstigsten
-    ({{ cheapest.cost|eur }}). Werte noch nicht final geprüft.
-  </p>
+<section class="landing-hero">
+  <div>
+    <p class="eyebrow">Broker-Kostenvergleich</p>
+    <h1>{{ cfg.tagline }}</h1>
+    <p class="lede">
+      Für jede Aktie und jeden ETF eine Seite mit den Orderkosten je Broker,
+      dazu Kennzahlen, Dividenden und Aussagen des Managements mit Quelle.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#aktien" data-jump-search>Aktie oder ETF suchen</a>
+      <a class="btn btn-ghost" href="#so-gehts">So funktioniert es</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <svg viewBox="0 0 360 266" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="Beispiel eines Broker-Kostenvergleichs für einen Einmalkauf über 1.000 Euro">
+      <style>
+        .hv-card { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.5; }
+        .hv-accent { fill: var(--positive-line); }
+        .hv-hi { fill: var(--positive-bg); }
+        .hv-row { fill: var(--surface-2); }
+        .hv-bar { fill: var(--line-strong); }
+        .hv-dot { fill: var(--muted); }
+        .hv-label { fill: var(--muted); font-family: "Inter", sans-serif; }
+        .hv-name { fill: var(--ink); font-family: "Newsreader", Georgia, serif; }
+        .hv-cost { fill: var(--positive); font-family: "IBM Plex Mono", monospace; }
+      </style>
+      <rect class="hv-card" x="2" y="2" width="356" height="262" rx="16"/>
+      <rect class="hv-accent" x="2" y="2" width="356" height="4" rx="2"/>
+      <text class="hv-label" x="22" y="34" font-size="9.5" letter-spacing="1.3">AM GÜNSTIGSTEN · EINMALKAUF 1.000 EUR</text>
+      <text class="hv-name" x="22" y="60" font-size="16">{{ cheapest.broker.name }}</text>
+      <text class="hv-cost" x="338" y="60" text-anchor="end" font-size="15">{{ cheapest.cost|eur }}</text>
+
+      <rect class="hv-hi" x="14" y="82" width="332" height="30" rx="8"/>
+      <circle class="hv-accent" cx="30" cy="97" r="4"/>
+      <rect class="hv-accent" x="44" y="92" width="42" height="10" rx="5"/>
+      <text class="hv-cost" x="330" y="101" text-anchor="end" font-size="10">0,00 EUR</text>
+
+      <rect class="hv-row" x="14" y="120" width="332" height="26" rx="8"/>
+      <circle class="hv-dot" cx="30" cy="133" r="4"/>
+      <rect class="hv-bar" x="44" y="128" width="104" height="10" rx="5"/>
+
+      <rect class="hv-row" x="14" y="154" width="332" height="26" rx="8"/>
+      <circle class="hv-dot" cx="30" cy="167" r="4"/>
+      <rect class="hv-bar" x="44" y="162" width="168" height="10" rx="5"/>
+
+      <rect class="hv-row" x="14" y="188" width="332" height="26" rx="8"/>
+      <circle class="hv-dot" cx="30" cy="201" r="4"/>
+      <rect class="hv-bar" x="44" y="196" width="242" height="10" rx="5"/>
+
+      <text class="hv-label" x="22" y="240" font-size="9.5">Beispiel. Balkenlänge = Orderkosten. Werte noch nicht final geprüft.</text>
+    </svg>
+  </div>
 </section>
+
+<div class="section-head" id="so-gehts">
+  <h2>In drei Schritten zum Vergleich</h2>
+  <p>Kein Konto, keine Anmeldung. Titel wählen, Kosten ablesen, beim günstigsten Anbieter kaufen.</p>
+</div>
+<div class="steps">
+  <div class="step">
+    <svg class="step-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+    </svg>
+    <p class="step-n">Schritt 1</p>
+    <h3>Titel wählen</h3>
+    <p>Aktie oder ETF über Name, WKN oder ISIN suchen.</p>
+  </div>
+  <div class="step">
+    <svg class="step-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M3 20h18"/>
+    </svg>
+    <p class="step-n">Schritt 2</p>
+    <h3>Kosten je Broker vergleichen</h3>
+    <p>Ordergebühren für 250, 1.000 und 5.000 EUR, plus eigener Rechner.</p>
+  </div>
+  <div class="step">
+    <svg class="step-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M7 17 17 7"/><path d="M8 7h9v9"/>
+    </svg>
+    <p class="step-n">Schritt 3</p>
+    <h3>Beim günstigsten kaufen</h3>
+    <p>Direkt zum Anbieter. Werbelinks sind als solche gekennzeichnet.</p>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>Womit die Seite vergleicht</h2>
+  <p>{{ overview|length }} Aktien, {{ etf_overview|length }} ETFs und {{ brokers|length }} Broker. Jede Kachel führt in die Liste darunter.</p>
+</div>
+<div class="cats">
+  <a class="cat" href="#aktien">
+    <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/>
+    </svg>
+    <h3>Aktien</h3>
+    <p>Einzelwerte aus DAX, MDAX und den großen US-Titeln. Kosten, Kennzahlen, Dividenden, Meldungen.</p>
+    <span class="go">{{ overview|length }} Aktien ansehen</span>
+  </a>
+  <a class="cat" href="#etfs">
+    <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 16 9 5 9-5"/>
+    </svg>
+    <h3>ETFs</h3>
+    <p>Breit gestreute Fonds auf MSCI World, S&amp;P 500 und mehr. Mit TER, Replikation und Ertragsverwendung.</p>
+    <span class="go">{{ etf_overview|length }} ETFs ansehen</span>
+  </a>
+  <a class="cat" href="#broker">
+    <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M3 21h18"/><path d="M4 21V10l8-5 8 5v11"/><path d="M9 21v-6h6v6"/>
+    </svg>
+    <h3>Broker</h3>
+    <p>Neobroker und Filialbanken mit ihrem Gebührenmodell. Die Grundlage jeder Vergleichstabelle.</p>
+    <span class="go">{{ brokers|length }} Broker ansehen</span>
+  </a>
+</div>
+
+<div class="section-head">
+  <h2>Auf jeder Aktien- und ETF-Seite</h2>
+</div>
+<ul class="info-list">
+  <li>Günstigster Broker je Ordervolumen, sofort sichtbar</li>
+  <li>Vollständige Kostentabelle plus Rechner für das eigene Volumen</li>
+  <li>Kennzahlen: Kurs, Marktkapitalisierung, KGV, Kurs-Buchwert</li>
+  <li>Dividendenrendite, Ausschüttungsquote und letzte Zahlungen</li>
+  <li>Kurze Zusammenfassungen von Meldungen, jeweils mit Quellenlink</li>
+  <li>Stand und Datenquelle bei jeder Zahl</li>
+</ul>
+
+<p class="sources-strip">
+  Zahlen von Yahoo Finance und Stooq, Geschäftsberichten und öffentlichen
+  Meldungen. Broker-Gebühren handgepflegt, Stand siehe Fußzeile. Keine
+  Anlageberatung, keine Kaufempfehlung, keine Order- oder Zahlungsfunktion.
+</p>
 
 <section class="panel" id="aktien" data-listing>
   <div class="panel-head"><h2>Alle Aktien</h2></div>
