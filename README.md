@@ -8,8 +8,8 @@ Kein Bestandteil des `Finanzen`-Repos. Anderes Ziel, anderer Rechtsrahmen.
 
 ## Status
 
-Fruehes Geruest. Der Seitengenerator laeuft, die Broker-Gebuehren und der
-Aktien-Datensatz sind Startwerte. Noch nicht veroeffentlicht.
+Prototyp, live auf GitHub Pages. Der Seitengenerator laeuft, Broker-Gebuehren
+und der Aktien- und ETF-Datensatz sind Startwerte und noch nicht geprueft.
 
 ## Stack
 
@@ -22,15 +22,21 @@ Aktien-Datensatz sind Startwerte. Noch nicht veroeffentlicht.
 
 ```
 data/
-  brokers.yaml      gepflegte Gebuehrenmodelle je Broker (Hand, quartalsweise pruefen)
-  stocks.yaml       beobachtete Aktien (Ticker, WKN, ISIN, Slug)
+  brokers.yaml      Gebuehrenmodelle je Broker (Hand, quartalsweise pruefen)
+  stocks.yaml       beobachtete Aktien (Ticker, WKN, ISIN, Slug) -- Slugs bleiben ASCII
+  etfs.yaml         beobachtete ETFs (TER, Replikation, Ertragsverwendung, Domizil)
   generated/        Ausgabe von src/fetch.py, nicht in Git
 src/
   brokers.py        Kostenmodell und Guenstigster-Berechnung
+  etfs.py           ETF-Stammdaten laden
   fetch.py          Datenbeschaffung yfinance -> Stooq, schreibt data/generated/*.json
+                    (ETFs als etf-<slug>.json, ohne Meldungen)
+  summarize.py      optional: eigene Kurzzusammenfassungen je Meldung,
+                    nur mit ANTHROPIC_API_KEY, sonst no-op
   build.py          rendert templates/ nach dist/
-templates/          base, index, stock, broker, legal
+templates/          base, index, stock, etf, broker, legal, _calculator
 content/            Impressum, Datenschutz, Werbehinweis (Markdown)
+scripts/umlaut_fix.py   ASCII-Umschrift -> echte Umlaute im sichtbaren Text
 static/style.css    Design
 dist/               generierte Website, nicht in Git
 .github/workflows/  build-deploy.yml
