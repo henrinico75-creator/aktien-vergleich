@@ -1,0 +1,203 @@
+# Gebuehrenmodelle je Broker. Handgepflegt.
+#
+# WICHTIG: Die Werte sind Startwerte mit grobem Stand Anfang 2026 und muessen
+# vor einer Veroeffentlichung Zeile fuer Zeile gegen das Preis- und
+# Leistungsverzeichnis des jeweiligen Anbieters geprueft werden. Danach
+# quartalsweise nachziehen und feld `fee_basis` mit Datum aktualisieren.
+#
+# Felder:
+#   id                 stabiler Slug, wird zur URL /broker/<id>/
+#   name               Anzeigename
+#   venue              typischer Handelsplatz fuer diese Konditionen
+#   order_fixed        feste Ordergebuehr in EUR (Einmalkauf)
+#   order_pct          variabler Anteil vom Ordervolumen (0.0025 = 0,25 %)
+#   order_min          Untergrenze der Gesamt-Ordergebuehr in EUR (0 = keine)
+#   order_max          Obergrenze in EUR (null = keine)
+#   free_above         ab diesem Ordervolumen 0 EUR (null = nie)
+#   savings_plan_fixed feste Gebuehr je Sparplanausfuehrung in EUR
+#   savings_plan_pct   variabler Anteil je Sparplanausfuehrung
+#   subscription_eur   monatliches Abo in EUR (0 = keins)
+#   affiliate_url      echter Partnerlink, erst nach Programm-Aufnahme; sonst null
+#   note               kurze Einordnung fuer die Tabelle
+#   fee_basis          Quelle und Stand der Zahlen
+
+brokers:
+  - id: trade-republic
+    name: "Trade Republic"
+    venue: "LS Exchange"
+    order_fixed: 1.00
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: null
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "1 EUR Fremdkostenpauschale je Order. Sparplan kostenlos."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: scalable-free
+    name: "Scalable Capital (Free Broker)"
+    venue: "gettex"
+    order_fixed: 0.99
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: null
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "0,99 EUR je Order. Sparplan kostenlos."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: scalable-prime
+    name: "Scalable Capital (PRIME+)"
+    venue: "gettex"
+    order_fixed: 0.99
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: 250
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 4.99
+    affiliate_url: null
+    note: "0 EUR ab 250 EUR Ordervolumen. Abo 4,99 EUR im Monat."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: finanzen-net-zero
+    name: "Finanzen.net Zero"
+    venue: "gettex"
+    order_fixed: 1.00
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: 500
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "0 EUR ab 500 EUR Ordervolumen, sonst 1 EUR. Sparplan kostenlos."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: justtrade
+    name: "justTRADE"
+    venue: "LS Exchange / Quotrix"
+    order_fixed: 0.0
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: null
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "0 EUR Orderprovision. Kosten stecken im Spread."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: traders-place
+    name: "Traders Place"
+    venue: "LS Exchange"
+    order_fixed: 0.90
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: 500
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "0 EUR ab 500 EUR Ordervolumen, sonst 0,90 EUR. Sparplan kostenlos."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: smartbroker-plus
+    name: "Smartbroker+"
+    venue: "gettex"
+    order_fixed: 1.00
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: 500
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "0 EUR ab 500 EUR Ordervolumen, sonst 1 EUR."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: dkb
+    name: "DKB"
+    venue: "Xetra / Tradegate"
+    order_fixed: 3.49
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: null
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "3,49 EUR je Order (Aktionskondition). Sparplan kostenlos."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: comdirect
+    name: "comdirect"
+    venue: "Xetra / Tradegate"
+    order_fixed: 3.90
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: 59.90
+    free_above: null
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "3,90 EUR Aktionspreis. Regulaer hoeher und volumenabhaengig."
+    fee_basis: "grob Anfang 2026, Aktionspreis, VOR LAUNCH PRUEFEN"
+
+  - id: ing
+    name: "ING"
+    venue: "Xetra"
+    order_fixed: 4.90
+    order_pct: 0.0025
+    order_min: 0.0
+    order_max: 69.90
+    free_above: null
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "4,90 EUR + 0,25 % vom Kurswert, gedeckelt bei 69,90 EUR. Sparplan kostenlos."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: consorsbank
+    name: "Consorsbank"
+    venue: "Xetra / Tradegate"
+    order_fixed: 4.95
+    order_pct: 0.0025
+    order_min: 9.95
+    order_max: 69.00
+    free_above: null
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "4,95 EUR + 0,25 %, mindestens 9,95 EUR. Sparplan kostenlos."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+
+  - id: flatex
+    name: "flatex"
+    venue: "Xetra / gettex"
+    order_fixed: 5.90
+    order_pct: 0.0
+    order_min: 0.0
+    order_max: null
+    free_above: null
+    savings_plan_fixed: 0.0
+    savings_plan_pct: 0.0
+    subscription_eur: 0.0
+    affiliate_url: null
+    note: "5,90 EUR je Order zzgl. Handelsplatzentgelt. Sparplan kostenlos."
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"

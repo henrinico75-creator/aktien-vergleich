@@ -1,0 +1,42 @@
+# Beobachtete Aktien. Startliste mit haeufig gesuchten Titeln in Deutschland.
+#
+# Felder:
+#   slug      URL-Segment /aktie/<slug>/, eindeutig, nicht ohne Redirect aendern
+#   name      Anzeigename
+#   ticker    Yahoo-Finance-Schreibweise (Suffix .DE fuer Xetra usw.)
+#   wkn       6-stellige WKN
+#   isin      ISIN
+#   currency  Handelswaehrung der genannten Notiz
+#   sector    grobe Branche, fuer Filter und interne Verlinkung
+
+stocks:
+  # DAX / deutsche Standardwerte
+  - {slug: sap,               name: "SAP",                 ticker: "SAP.DE",  wkn: "716460", isin: "DE0007164600", currency: EUR, sector: "Software"}
+  - {slug: siemens,           name: "Siemens",             ticker: "SIE.DE",  wkn: "723610", isin: "DE0007236101", currency: EUR, sector: "Industrie"}
+  - {slug: allianz,           name: "Allianz",             ticker: "ALV.DE",  wkn: "840400", isin: "DE0008404005", currency: EUR, sector: "Versicherung"}
+  - {slug: deutsche-telekom,  name: "Deutsche Telekom",    ticker: "DTE.DE",  wkn: "555750", isin: "DE0005557508", currency: EUR, sector: "Telekom"}
+  - {slug: mercedes-benz,     name: "Mercedes-Benz Group", ticker: "MBG.DE",  wkn: "710000", isin: "DE0007100000", currency: EUR, sector: "Automobil"}
+  - {slug: bmw,               name: "BMW",                 ticker: "BMW.DE",  wkn: "519000", isin: "DE0005190003", currency: EUR, sector: "Automobil"}
+  - {slug: volkswagen-vz,     name: "Volkswagen Vorzuege", ticker: "VOW3.DE", wkn: "766403", isin: "DE0007664039", currency: EUR, sector: "Automobil"}
+  - {slug: basf,              name: "BASF",                ticker: "BAS.DE",  wkn: "BASF11", isin: "DE000BASF111", currency: EUR, sector: "Chemie"}
+  - {slug: bayer,             name: "Bayer",               ticker: "BAYN.DE", wkn: "BAY001", isin: "DE000BAY0017", currency: EUR, sector: "Pharma"}
+  - {slug: muenchener-rueck,  name: "Muenchener Rueck",    ticker: "MUV2.DE", wkn: "843002", isin: "DE0008430026", currency: EUR, sector: "Rueckversicherung"}
+  - {slug: deutsche-bank,     name: "Deutsche Bank",       ticker: "DBK.DE",  wkn: "514000", isin: "DE0005140008", currency: EUR, sector: "Bank"}
+  - {slug: rheinmetall,       name: "Rheinmetall",         ticker: "RHM.DE",  wkn: "703000", isin: "DE0007030009", currency: EUR, sector: "Ruestung"}
+  - {slug: infineon,          name: "Infineon",            ticker: "IFX.DE",  wkn: "623100", isin: "DE0006231004", currency: EUR, sector: "Halbleiter"}
+  - {slug: adidas,            name: "adidas",              ticker: "ADS.DE",  wkn: "A1EWWW", isin: "DE000A1EWWW0", currency: EUR, sector: "Konsum"}
+  - {slug: deutsche-post,     name: "DHL Group",           ticker: "DHL.DE",  wkn: "555200", isin: "DE0005552004", currency: EUR, sector: "Logistik"}
+
+  # US-Standardwerte mit hoher Suchnachfrage in Deutschland
+  - {slug: apple,             name: "Apple",               ticker: "AAPL",    wkn: "865985", isin: "US0378331005", currency: USD, sector: "Technologie"}
+  - {slug: microsoft,         name: "Microsoft",           ticker: "MSFT",    wkn: "870747", isin: "US5949181045", currency: USD, sector: "Software"}
+  - {slug: nvidia,            name: "NVIDIA",              ticker: "NVDA",    wkn: "918422", isin: "US67066G1040", currency: USD, sector: "Halbleiter"}
+  - {slug: amazon,            name: "Amazon",              ticker: "AMZN",    wkn: "906866", isin: "US0231351067", currency: USD, sector: "Handel"}
+  - {slug: alphabet,          name: "Alphabet (A)",        ticker: "GOOGL",   wkn: "A14Y6F", isin: "US02079K3059", currency: USD, sector: "Technologie"}
+  - {slug: meta,              name: "Meta Platforms",      ticker: "META",    wkn: "A1JWVX", isin: "US30303M1027", currency: USD, sector: "Technologie"}
+  - {slug: tesla,             name: "Tesla",               ticker: "TSLA",    wkn: "A1CX3T", isin: "US88160R1014", currency: USD, sector: "Automobil"}
+  - {slug: coca-cola,         name: "Coca-Cola",           ticker: "KO",      wkn: "850663", isin: "US1912161007", currency: USD, sector: "Konsum"}
+  - {slug: realty-income,     name: "Realty Income",       ticker: "O",       wkn: "899744", isin: "US7561091049", currency: USD, sector: "REIT"}
+  - {slug: johnson-johnson,   name: "Johnson & Johnson",   ticker: "JNJ",     wkn: "853260", isin: "US4781601046", currency: USD, sector: "Pharma"}
+  - {slug: mcdonalds,         name: "McDonald's",          ticker: "MCD",     wkn: "856958", isin: "US5801351017", currency: USD, sector: "Konsum"}
+  - {slug: berkshire-b,       name: "Berkshire Hathaway B", ticker: "BRK-B",  wkn: "A0YJQ2", isin: "US0846707026", currency: USD, sector: "Beteiligungen"}

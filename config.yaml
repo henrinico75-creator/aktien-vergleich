@@ -1,0 +1,22 @@
+# Zentrale Konfiguration fuer den Seitengenerator.
+
+site_name: "Aktien-Kosten"
+tagline: "Wo kaufe ich welche Aktie am guenstigsten?"
+
+# Vollstaendige URL fuer sitemap.xml und canonical. Vor Launch anpassen oder
+# ueber Umgebungsvariable SITE_BASE_URL setzen (z. B. in GitHub Actions).
+base_url: "https://USER.github.io/aktien-vergleich"
+
+# Pfad-Prefix fuer Links und Assets INNERHALB der Seiten. Lokal leer lassen,
+# damit "python -m http.server -d dist" funktioniert. Auf GitHub Project Pages
+# den Repo-Namen setzen (z. B. aktien-vergleich) oder SITE_PATH_PREFIX nutzen.
+path_prefix: ""
+
+# Ordervolumina (EUR), fuer die die Kostentabelle je Aktie gerendert wird.
+default_order_sizes: [250, 1000, 5000]
+
+# Impressum-Kurzangabe fuer den Footer. Vollstaendiges Impressum in content/.
+owner_name: "Nico Buecher"
+
+# Anzeigehinweis: solange true, blendet jede Seite den Prototyp-Banner ein.
+prototype_banner: true

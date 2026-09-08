@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | {{ cfg.site_name }}{% endblock %}
+{% block description %}{{ title }} von {{ cfg.site_name }}.{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>{{ title }}</h1>
+</section>
+<section class="panel prose">
+  {{ body|safe }}
+</section>
+{% endblock %}

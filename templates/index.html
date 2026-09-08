@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ cfg.site_name }}: Aktien guenstig kaufen im Broker-Vergleich{% endblock %}
+{% block description %}Pro Aktie: bei welchem Broker Kauf und Sparplan am wenigsten kosten, plus Kennzahlen und aktuelle Meldungen.{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/">{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>{{ cfg.tagline }}</h1>
+  <p class="lede">
+    Fuer jede Aktie eine Seite mit dem Kostenvergleich ueber {{ overview|length }} Titel
+    und {{ brokers|length }} Broker. Dazu die wichtigsten Kennzahlen,
+    Dividendendaten und aktuelle Aussagen des Managements.
+  </p>
+  <p class="hero-note">
+    Beispiel: Einmalkauf ueber 1.000 EUR ist derzeit bei
+    <strong>{{ cheapest.broker.name }}</strong> am guenstigsten
+    ({{ cheapest.cost|eur }}). Werte noch nicht final geprueft.
+  </p>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>Alle Aktien</h2></div>
+  <div class="table-scroll">
+    <table class="listing">
+      <thead>
+        <tr><th>Aktie</th><th>WKN</th><th>Branche</th><th class="num">Kurs</th></tr>
+      </thead>
+      <tbody>
+        {% for row in overview %}
+        <tr>
+          <td>
+            <a class="listing-link" href="{{ cfg.path_prefix }}/aktie/{{ row.stock.slug }}/">{{ row.stock.name }}</a>
+          </td>
+          <td class="mono">{{ row.stock.wkn }}</td>
+          <td>{{ row.stock.sector }}</td>
+          <td class="num">
+            {% if row.has_data and row.data.price is not none %}
+              {{ row.data.price|num }} {{ row.data.currency or row.stock.currency }}
+            {% else %}
+              <span class="muted">wird geladen</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>Broker im Vergleich</h2></div>
+  <p class="muted">Diese Gebuehrenmodelle liegen jeder Aktienseite zugrunde.</p>
+  <div class="table-scroll">
+    <table class="listing">
+      <thead>
+        <tr><th>Broker</th><th>Handelsplatz</th><th>Konditionen</th></tr>
+      </thead>
+      <tbody>
+        {% for b in brokers %}
+        <tr>
+          <td><a class="listing-link" href="{{ cfg.path_prefix }}/broker/{{ b.id }}/">{{ b.name }}</a></td>
+          <td>{{ b.venue }}</td>
+          <td class="muted">{{ b.note }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

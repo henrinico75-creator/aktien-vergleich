@@ -1,0 +1,14 @@
+# Nach dem ersten Install Versionen fixieren:
+#   pip freeze > requirements.lock
+# yfinance aendert sich oft durch Yahoo-API-Anpassungen, Stand im Blick behalten.
+
+jinja2>=3.1
+pyyaml>=6.0
+yfinance>=0.2.40
+pandas>=2.0
+requests>=2.31
+markdown>=3.6
+python-dotenv>=1.0
+
+# Tests
+pytest>=8.0
