@@ -17,12 +17,12 @@ stocks:
   - {slug: deutsche-telekom,  name: "Deutsche Telekom",    ticker: "DTE.DE",  wkn: "555750", isin: "DE0005557508", currency: EUR, sector: "Telekom"}
   - {slug: mercedes-benz,     name: "Mercedes-Benz Group", ticker: "MBG.DE",  wkn: "710000", isin: "DE0007100000", currency: EUR, sector: "Automobil"}
   - {slug: bmw,               name: "BMW",                 ticker: "BMW.DE",  wkn: "519000", isin: "DE0005190003", currency: EUR, sector: "Automobil"}
-  - {slug: volkswagen-vz,     name: "Volkswagen Vorzuege", ticker: "VOW3.DE", wkn: "766403", isin: "DE0007664039", currency: EUR, sector: "Automobil"}
+  - {slug: volkswagen-vz,     name: "Volkswagen Vorzüge", ticker: "VOW3.DE", wkn: "766403", isin: "DE0007664039", currency: EUR, sector: "Automobil"}
   - {slug: basf,              name: "BASF",                ticker: "BAS.DE",  wkn: "BASF11", isin: "DE000BASF111", currency: EUR, sector: "Chemie"}
   - {slug: bayer,             name: "Bayer",               ticker: "BAYN.DE", wkn: "BAY001", isin: "DE000BAY0017", currency: EUR, sector: "Pharma"}
-  - {slug: muenchener-rueck,  name: "Muenchener Rueck",    ticker: "MUV2.DE", wkn: "843002", isin: "DE0008430026", currency: EUR, sector: "Rueckversicherung"}
+  - {slug: muenchener-rueck,  name: "Münchener Rück",      ticker: "MUV2.DE", wkn: "843002", isin: "DE0008430026", currency: EUR, sector: "Rückversicherung"}
   - {slug: deutsche-bank,     name: "Deutsche Bank",       ticker: "DBK.DE",  wkn: "514000", isin: "DE0005140008", currency: EUR, sector: "Bank"}
-  - {slug: rheinmetall,       name: "Rheinmetall",         ticker: "RHM.DE",  wkn: "703000", isin: "DE0007030009", currency: EUR, sector: "Ruestung"}
+  - {slug: rheinmetall,       name: "Rheinmetall",         ticker: "RHM.DE",  wkn: "703000", isin: "DE0007030009", currency: EUR, sector: "Rüstung"}
   - {slug: infineon,          name: "Infineon",            ticker: "IFX.DE",  wkn: "623100", isin: "DE0006231004", currency: EUR, sector: "Halbleiter"}
   - {slug: adidas,            name: "adidas",              ticker: "ADS.DE",  wkn: "A1EWWW", isin: "DE000A1EWWW0", currency: EUR, sector: "Konsum"}
   - {slug: deutsche-post,     name: "DHL Group",           ticker: "DHL.DE",  wkn: "555200", isin: "DE0005552004", currency: EUR, sector: "Logistik"}
@@ -45,7 +45,7 @@ stocks:
   - {slug: porsche-ag,        name: "Porsche AG",          ticker: "P911.DE", wkn: "PAG911", isin: "DE000PAG9113", currency: EUR, sector: "Automobil"}
   - {slug: porsche-se,        name: "Porsche SE",          ticker: "PAH3.DE", wkn: "PAH003", isin: "DE000PAH0038", currency: EUR, sector: "Beteiligungen"}
   - {slug: beiersdorf,        name: "Beiersdorf",          ticker: "BEI.DE",  wkn: "520000", isin: "DE0005200000", currency: EUR, sector: "Konsum"}
-  - {slug: henkel-vz,         name: "Henkel Vorzuege",     ticker: "HEN3.DE", wkn: "604843", isin: "DE0006048432", currency: EUR, sector: "Konsum"}
+  - {slug: henkel-vz,         name: "Henkel Vorzüge",     ticker: "HEN3.DE", wkn: "604843", isin: "DE0006048432", currency: EUR, sector: "Konsum"}
   - {slug: fresenius,         name: "Fresenius",           ticker: "FRE.DE",  wkn: "578560", isin: "DE0005785604", currency: EUR, sector: "Gesundheit"}
   - {slug: eon,               name: "E.ON",                ticker: "EOAN.DE", wkn: "ENAG99", isin: "DE000ENAG999", currency: EUR, sector: "Versorger"}
   - {slug: rwe,               name: "RWE",                 ticker: "RWE.DE",  wkn: "703712", isin: "DE0007037129", currency: EUR, sector: "Versorger"}
@@ -55,8 +55,8 @@ stocks:
   - {slug: commerzbank,       name: "Commerzbank",         ticker: "CBK.DE",  wkn: "CBK100", isin: "DE000CBK1001", currency: EUR, sector: "Bank"}
   - {slug: heidelberg-materials, name: "Heidelberg Materials", ticker: "HEI.DE", wkn: "604700", isin: "DE0006047004", currency: EUR, sector: "Baustoffe"}
   - {slug: mtu,               name: "MTU Aero Engines",    ticker: "MTX.DE",  wkn: "A0D9PT", isin: "DE000A0D9PT0", currency: EUR, sector: "Industrie"}
-  - {slug: hannover-rueck,    name: "Hannover Rueck",      ticker: "HNR1.DE", wkn: "840221", isin: "DE0008402215", currency: EUR, sector: "Rueckversicherung"}
-  - {slug: deutsche-boerse,   name: "Deutsche Boerse",     ticker: "DB1.DE",  wkn: "581005", isin: "DE0005810055", currency: EUR, sector: "Finanzen"}
+  - {slug: hannover-rueck,    name: "Hannover Rück",       ticker: "HNR1.DE", wkn: "840221", isin: "DE0008402215", currency: EUR, sector: "Rückversicherung"}
+  - {slug: deutsche-boerse,   name: "Deutsche Börse",      ticker: "DB1.DE",  wkn: "581005", isin: "DE0005810055", currency: EUR, sector: "Finanzen"}
   - {slug: siemens-energy,    name: "Siemens Energy",      ticker: "ENR.DE",  wkn: "ENER6Y", isin: "DE000ENER6Y0", currency: EUR, sector: "Energietechnik"}
   - {slug: siemens-healthineers, name: "Siemens Healthineers", ticker: "SHL.DE", wkn: "SHL100", isin: "DE000SHL1006", currency: EUR, sector: "Medizintechnik"}
 
@@ -64,7 +64,7 @@ stocks:
   - {slug: asml,              name: "ASML",                ticker: "ASML.AS", wkn: "A1J4U4", isin: "NL0010273215", currency: EUR, sector: "Halbleiter"}
   - {slug: lvmh,              name: "LVMH",                ticker: "MC.PA",   wkn: "853292", isin: "FR0000121014", currency: EUR, sector: "Luxus"}
   - {slug: totalenergies,     name: "TotalEnergies",       ticker: "TTE.PA",  wkn: "850727", isin: "FR0000120271", currency: EUR, sector: "Energie"}
-  - {slug: nestle,            name: "Nestle",              ticker: "NESN.SW", wkn: "A0Q4DC", isin: "CH0038863350", currency: CHF, sector: "Konsum"}
+  - {slug: nestle,            name: "Nestlé",              ticker: "NESN.SW", wkn: "A0Q4DC", isin: "CH0038863350", currency: CHF, sector: "Konsum"}
   - {slug: novartis,          name: "Novartis",            ticker: "NOVN.SW", wkn: "904278", isin: "CH0012005267", currency: CHF, sector: "Pharma"}
   - {slug: novo-nordisk,      name: "Novo Nordisk",        ticker: "NVO",     wkn: "A1XA8R", isin: "US6701002056", currency: USD, sector: "Pharma"}
   - {slug: shell,             name: "Shell",               ticker: "SHEL",    wkn: "A3C99G", isin: "GB00BP6MXD84", currency: USD, sector: "Energie"}
