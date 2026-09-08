@@ -46,6 +46,31 @@ def _safe(fn: Callable[[], Any]) -> Any:
     return v
 
 
+def _news_date(raw: Any) -> str | None:
+    """Normalisiert das Meldungsdatum auf YYYY-MM-DD.
+
+    yfinance liefert je nach Antwortformat entweder einen ISO-String
+    (content.pubDate) oder einen Unix-Zeitstempel (providerPublishTime).
+    Ohne Normalisierung landet der rohe Zeitstempel als Datum im Template.
+    """
+    if raw is None:
+        return None
+    if isinstance(raw, (int, float)):
+        try:
+            return datetime.fromtimestamp(float(raw), timezone.utc).strftime("%Y-%m-%d")
+        except (OverflowError, OSError, ValueError):
+            return None
+    text = str(raw).strip()
+    if not text:
+        return None
+    if text.isdigit():
+        try:
+            return datetime.fromtimestamp(int(text), timezone.utc).strftime("%Y-%m-%d")
+        except (OverflowError, OSError, ValueError):
+            return None
+    return text[:10]
+
+
 def _stooq_symbol(ticker: str) -> str:
     if ticker.endswith(".DE"):
         return ticker[:-3].lower() + ".de"
@@ -127,7 +152,9 @@ def fetch_from_yfinance(ticker: str) -> dict:
             provider = (content.get("provider") or {}).get("displayName") or entry.get(
                 "publisher"
             )
-            published = content.get("pubDate") or entry.get("providerPublishTime")
+            published = _news_date(
+                content.get("pubDate") or entry.get("providerPublishTime")
+            )
             items.append(
                 {"title": title, "url": link, "provider": provider, "published": published}
             )

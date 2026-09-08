@@ -15,7 +15,7 @@
 <header class="site-head">
   <div class="wrap head-inner">
     <a class="brand" href="{{ cfg.path_prefix }}/">{{ cfg.site_name }}</a>
-    <nav class="site-nav"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a></nav>
+    <nav class="site-nav" aria-label="Hauptnavigation"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a></nav>
   </div>
 </header>
 {% if cfg.prototype_banner %}
@@ -28,7 +28,7 @@
 </main>
 <footer class="site-foot">
   <div class="wrap">
-    <nav class="foot-links">
+    <nav class="foot-links" aria-label="Rechtliches">
       <a href="{{ cfg.path_prefix }}/impressum/">Impressum</a>
       <a href="{{ cfg.path_prefix }}/datenschutz/">Datenschutz</a>
       <a href="{{ cfg.path_prefix }}/werbehinweis/">Werbehinweis</a>

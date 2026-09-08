@@ -39,8 +39,11 @@ DIST = ROOT / "dist"
 
 def load_config() -> dict:
     cfg = yaml.safe_load((ROOT / "config.yaml").read_text(encoding="utf-8"))
-    cfg["base_url"] = os.environ.get("SITE_BASE_URL", cfg["base_url"]).rstrip("/")
-    prefix = os.environ.get("SITE_PATH_PREFIX", cfg.get("path_prefix", "")).strip()
+    # Leere Umgebungsvariablen zaehlen als "nicht gesetzt". GitHub Actions
+    # setzt nicht definierte Repository-Variablen als leeren String, ein
+    # os.environ.get(name, default) wuerde dann "" statt des Defaults liefern.
+    cfg["base_url"] = (os.environ.get("SITE_BASE_URL") or cfg["base_url"]).rstrip("/")
+    prefix = (os.environ.get("SITE_PATH_PREFIX") or cfg.get("path_prefix", "")).strip()
     cfg["path_prefix"] = ("/" + prefix.strip("/")) if prefix.strip("/") else ""
     return cfg
 
@@ -211,7 +214,9 @@ def build() -> None:
             html = "<pre>" + raw.replace("<", "&lt;") + "</pre>"
         _write(
             DIST / name / "index.html",
-            legal_tpl.render(cfg=cfg, built_at=built_at, title=title, body=html),
+            legal_tpl.render(
+                cfg=cfg, built_at=built_at, title=title, slug=name, body=html
+            ),
         )
 
     _write_sitemap(cfg, stocks, brokers)
@@ -241,7 +246,13 @@ def _brokers_json(brokers: list[Broker]) -> str:
         }
         for b in brokers
     ]
-    return json.dumps(payload, ensure_ascii=False)
+    text = json.dumps(payload, ensure_ascii=False)
+    # Das Ergebnis wird per |safe direkt in einen <script>-Block geschrieben.
+    # < > & als Unicode-Escapes, damit z. B. ein "</script>" in einem Feld den
+    # Block nicht vorzeitig beendet. JSON-Semantik bleibt unveraendert.
+    return (
+        text.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+    )
 
 
 if __name__ == "__main__":

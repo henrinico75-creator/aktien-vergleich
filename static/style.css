@@ -48,6 +48,12 @@ a { color: var(--accent-ink); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) a { color: var(--accent); } }
 :root[data-theme="dark"] a { color: var(--accent); }
 
+/* Nur fuer Screenreader sichtbar (z. B. Spaltenueberschrift ohne sichtbaren Text). */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
 .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
 .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
 .muted { color: var(--muted); }

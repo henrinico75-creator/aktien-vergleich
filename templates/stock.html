@@ -5,7 +5,7 @@
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/aktie/{{ stock.slug }}/">{% endblock %}
 
 {% block content %}
-<nav class="crumbs"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a> / {{ stock.name }}</nav>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a> / {{ stock.name }}</nav>
 
 <section class="hero">
   <h1>{{ stock.name }} Aktie kaufen: Kosten je Broker</h1>
@@ -78,7 +78,7 @@
   <div class="table-scroll">
     <table class="cmp" id="calc-table">
       <thead>
-        <tr><th>Broker</th><th class="num">Kosten</th><th class="num">Anteil</th><th></th></tr>
+        <tr><th>Broker</th><th class="num">Kosten</th><th class="num">Anteil</th><th class="num"><span class="sr-only">Link zum Anbieter</span></th></tr>
       </thead>
       <tbody id="calc-rows"></tbody>
     </table>
@@ -128,7 +128,7 @@
     {% for n in data.news %}
     <li>
       <div class="n-meta">
-        {% if n.published %}<span>{{ n.published|string|truncate(10, true, "") }}</span><span>&middot;</span>{% endif %}
+        {% if n.published %}<span>{{ n.published }}</span><span aria-hidden="true">&middot;</span>{% endif %}
         <span>{{ n.provider or "Quelle" }}</span>
       </div>
       {% if n.url %}
@@ -156,6 +156,12 @@
   var deInt = new Intl.NumberFormat("de-DE");
   var dePct = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
+  function esc(s) {
+    return String(s === null || s === undefined ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
   function orderCost(b, v) {
     if (b.free_above !== null && b.free_above !== undefined && v >= b.free_above) return 0;
     var c = b.order_fixed + b.order_pct * v;
@@ -182,12 +188,12 @@
       if (best && x.c > 0) tr.className = "best";
       else if (x.c === 0) tr.className = "zero";
       var link = x.b.affiliate_url
-        ? '<a class="mini-cta" href="' + x.b.affiliate_url + '" rel="nofollow sponsored noopener" target="_blank">zum Anbieter</a>'
+        ? '<a class="mini-cta" href="' + esc(x.b.affiliate_url) + '" rel="nofollow sponsored noopener" target="_blank">zum Anbieter</a>'
         : '';
       tr.innerHTML =
-        '<td><div class="bname">' + x.b.name +
+        '<td><div class="bname">' + esc(x.b.name) +
         (best && x.c > 0 ? ' <span class="tag">Guenstigster</span>' : '') +
-        '</div><div class="note">' + x.b.note + '</div></td>' +
+        '</div><div class="note">' + esc(x.b.note) + '</div></td>' +
         '<td class="num">' + deEUR.format(x.c) + ' EUR</td>' +
         '<td class="num">' + dePct.format(v ? (x.c / v * 100) : 0) + ' %</td>' +
         '<td class="num">' + link + '</td>';

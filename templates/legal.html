@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ title }} | {{ cfg.site_name }}{% endblock %}
 {% block description %}{{ title }} von {{ cfg.site_name }}.{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/{{ slug }}/">{% endblock %}
 
 {% block content %}
 <section class="hero">

@@ -4,7 +4,7 @@
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/broker/{{ broker.id }}/">{% endblock %}
 
 {% block content %}
-<nav class="crumbs"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a> / Broker / {{ broker.name }}</nav>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a> / Broker / {{ broker.name }}</nav>
 
 <section class="hero">
   <h1>{{ broker.name }}: Gebuehren und Konditionen</h1>
