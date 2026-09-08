@@ -1,15 +1,27 @@
 {% extends "base.html" %}
+{% import "_costtable.html" as ct %}
 {% set cur = data.currency or stock.currency %}
+{% set ref_size = 1000 if 1000 in sizes else sizes[0] %}
+{% set ref = (matrix | selectattr('size', 'equalto', ref_size) | list | first) %}
+{% set rrows = ref.rows %}
+{% set best_cost = rrows[0].cost %}
+{% set best = rrows | selectattr('cost', 'equalto', best_cost) | list %}
+{% set rest = rrows[best|length : best|length + 3] %}
 {% block title %}{{ stock.name }} Aktie kaufen: Broker-Kostenvergleich | {{ cfg.site_name }}{% endblock %}
 {% block description %}{{ stock.name }} (WKN {{ stock.wkn }}) günstig kaufen: Ordergebühren im Broker-Vergleich, Kennzahlen, Dividende und aktuelle Meldungen.{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/aktie/{{ stock.slug }}/">{% endblock %}
 
 {% block content %}
-<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a> / {{ stock.name }}</nav>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Aktien</a> / {{ stock.name }}</nav>
 
 <section class="hero">
   <h1>{{ stock.name }} Aktie kaufen: Kosten je Broker</h1>
-  <p class="ident mono">WKN {{ stock.wkn }} &middot; ISIN {{ stock.isin }} &middot; Ticker {{ stock.ticker }} &middot; {{ stock.sector }}</p>
+  <ul class="chips">
+    <li class="chip">WKN {{ stock.wkn }}</li>
+    <li class="chip">ISIN {{ stock.isin }}</li>
+    <li class="chip">Ticker {{ stock.ticker }}</li>
+    <li class="chip">{{ stock.sector }}</li>
+  </ul>
   {% if has_data %}
   <p class="hero-note">
     Kurs {{ data.price|num }} {{ cur }}{% if data.market_cap %}, Marktkapitalisierung {{ data.market_cap|mktcap }} {{ cur }}{% endif %}.
@@ -20,45 +32,62 @@
   {% endif %}
 </section>
 
+<section class="result" data-result aria-labelledby="result-label">
+  <p class="result-label" id="result-label">Am günstigsten &middot; Einmalkauf <span data-ref-size>{{ ref_size|num(0) }} EUR</span></p>
+  <div class="result-main">
+    <span class="result-who" data-result-who>
+      {%- if best|length > 1 -%}{{ best|length }} Broker gleichauf{%- else -%}{{ best[0].broker.name }}{%- endif -%}
+    </span>
+    <span class="result-cost" data-result-cost>{{ best_cost|eur }}</span>
+  </div>
+  <p class="result-meta" data-result-meta>
+    {%- if best|length > 1 -%}
+      {{ best[:3] | map(attribute='broker.name') | join(', ') }}{% if best|length > 3 %} und weitere{% endif %}
+    {%- else -%}
+      {{ best[0].broker.venue }} &middot; {{ (best[0].cost_ratio * 100)|pct }} % vom Ordervolumen
+    {%- endif -%}
+  </p>
+  <div class="result-sizes" data-result-sizes hidden>
+    {% for s in sizes %}
+    <button type="button" data-size="{{ s }}" aria-pressed="{{ 'true' if s == ref_size else 'false' }}">{{ s|num(0) }} EUR</button>
+    {% endfor %}
+  </div>
+  <p class="result-alt" data-result-alt>
+    {%- if rest -%}Danach: <strong>{{ rest | map(attribute='broker.name') | join('</strong>, <strong>') | safe }}</strong>.{%- endif -%}
+  </p>
+  <div class="result-foot">
+    <span>Beispieldaten, noch nicht final geprüft.</span>
+    <a href="#rechner">Eigenes Volumen rechnen</a>
+  </div>
+</section>
+
 <section class="panel">
   <div class="panel-head">
     <h2>Ordergebühren beim Einmalkauf</h2>
     <span class="badge">Beispieldaten</span>
   </div>
-  <p class="muted">
-    Gesamtkosten einer einzelnen Kauforder über die genannten Beträge. Ohne
-    Depotgebühren, ohne Spread, ohne monatliche Abos. Diese sind je Broker
-    gesondert vermerkt.
+  <p class="panel-lead">
+    Gesamtkosten einer einzelnen Kauforder. Ohne Depotgebühren, ohne Spread,
+    ohne monatliche Abos. Diese sind je Broker gesondert vermerkt. Der Balken
+    zeigt die Kosten im Verhältnis zum teuersten hier gelisteten Broker.
   </p>
 
   {% for block in matrix %}
+  {% set maxcost = block.rows | map(attribute='cost') | max %}
+  {% if block.size == ref_size %}
   <h3 class="matrix-size">Ordervolumen {{ block.size|num(0) }} EUR</h3>
-  <div class="table-scroll">
-    <table class="cmp">
-      <thead>
-        <tr><th>Broker</th><th>Handelsplatz</th><th class="num">Kosten</th><th class="num">Anteil</th></tr>
-      </thead>
-      <tbody>
-        {% for q in block.rows %}
-        <tr class="{{ 'best' if q.is_cheapest and q.cost > 0 else ('zero' if q.cost == 0 else '') }}">
-          <td>
-            <div class="bname">
-              {{ q.broker.name }}
-              {% if q.is_cheapest and q.cost > 0 %}<span class="tag">Günstigster</span>{% endif %}
-              {% if q.broker.subscription_eur and q.broker.subscription_eur > 0 %}
-                <span class="tag sub">+ {{ q.broker.subscription_eur|num }} EUR/Monat</span>
-              {% endif %}
-            </div>
-            <div class="note">{{ q.broker.note }}</div>
-          </td>
-          <td class="venue">{{ q.broker.venue }}</td>
-          <td class="num">{{ q.cost|eur }}</td>
-          <td class="num">{{ (q.cost_ratio * 100)|pct }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  {{ ct.cost_table(block, maxcost) }}
+  {% endif %}
+  {% endfor %}
+
+  {% for block in matrix %}
+  {% set maxcost = block.rows | map(attribute='cost') | max %}
+  {% if block.size != ref_size %}
+  <details class="more">
+    <summary>Ordervolumen {{ block.size|num(0) }} EUR anzeigen</summary>
+    {{ ct.cost_table(block, maxcost) }}
+  </details>
+  {% endif %}
   {% endfor %}
 
   <p class="foot-note">
@@ -73,14 +102,14 @@
 <section class="panel">
   <div class="panel-head"><h2>Kennzahlen</h2>{% if not has_data %}<span class="badge">ausstehend</span>{% endif %}</div>
   {% if has_data %}
-  <dl class="kv">
-    <div><dt>Kurs</dt><dd>{{ data.price|num }} {{ cur }}</dd></div>
-    <div><dt>Marktkapitalisierung</dt><dd>{{ data.market_cap|mktcap }} {{ cur }}</dd></div>
-    <div><dt>KGV (letzte 12 Monate)</dt><dd>{{ data.pe_trailing|num }}</dd></div>
-    <div><dt>KGV (erwartet)</dt><dd>{{ data.pe_forward|num }}</dd></div>
-    <div><dt>Kurs-Buchwert</dt><dd>{{ data.price_to_book|num }}</dd></div>
-    <div><dt>Dividendenrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
-    <div><dt>Ausschüttungsquote</dt><dd>{{ (data.payout_ratio * 100)|pct if data.payout_ratio is not none else 'n/a' }}</dd></div>
+  <dl class="stat-grid">
+    <div class="stat"><dt>Kurs</dt><dd>{{ data.price|num }} {{ cur }}</dd></div>
+    <div class="stat"><dt>Marktkapitalisierung</dt><dd>{{ data.market_cap|mktcap }} {{ cur }}</dd></div>
+    <div class="stat"><dt>KGV (letzte 12 Monate)</dt><dd>{{ data.pe_trailing|num }}</dd></div>
+    <div class="stat"><dt>KGV (erwartet)</dt><dd>{{ data.pe_forward|num }}</dd></div>
+    <div class="stat"><dt>Kurs-Buchwert</dt><dd>{{ data.price_to_book|num }}</dd></div>
+    <div class="stat"><dt>Dividendenrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
+    <div class="stat"><dt>Ausschüttungsquote</dt><dd>{{ (data.payout_ratio * 100)|pct if data.payout_ratio is not none else 'n/a' }}</dd></div>
   </dl>
   <p class="foot-note">Quelle {{ data.source }}, Stand {{ data.fetched_at }}. KGV und Kennzahlen können je nach Datenanbieter abweichen (anderer Stichtag, andere Bereinigung).</p>
   {% else %}
@@ -89,17 +118,17 @@
 </section>
 
 {% if data.dividends %}
+{% set divmax = data.dividends | map(attribute='amount') | max %}
 <section class="panel">
   <div class="panel-head"><h2>Letzte Dividendenzahlungen</h2></div>
-  <div class="table-scroll">
-    <table class="cmp">
-      <thead><tr><th>Datum</th><th class="num">Betrag je Aktie</th></tr></thead>
-      <tbody>
-        {% for d in data.dividends|reverse %}
-        <tr><td class="mono">{{ d.date }}</td><td class="num">{{ d.amount|num(2) if d.amount >= 1 else d.amount|num(4) }} {{ cur }}</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="divbars">
+    {% for d in data.dividends|reverse %}
+    <div class="divbar">
+      <span class="d-date">{{ d.date }}</span>
+      <span class="d-track"><span class="d-fill" style="width: {{ (d.amount / divmax * 100)|round(1) if divmax else 0 }}%"></span></span>
+      <span class="d-amt">{{ d.amount|num(2) if d.amount >= 1 else d.amount|num(4) }} {{ cur }}</span>
+    </div>
+    {% endfor %}
   </div>
   <p class="foot-note">Quelle {{ data.source }}. Ex-Tag-Angaben, keine Zusage künftiger Zahlungen.</p>
 </section>
@@ -108,11 +137,11 @@
 <section class="panel">
   <div class="panel-head"><h2>Aktuelles und Management-Aussagen</h2></div>
   {% if data.news %}
-  <div class="statements">
+  <div class="newslist">
     {% for n in data.news %}
-    <article class="statement">
-      <p class="statement-text">{{ n.summary or n.title }}</p>
-      <p class="statement-src">
+    <article class="newsitem">
+      <p class="news-text">{{ n.summary or n.title }}</p>
+      <p class="news-src">
         Quelle:
         {% if n.url %}
         <a href="{{ n.url }}" rel="nofollow noopener" target="_blank">{{ n.provider or "Bericht" }}{% if n.published %}, {{ n.published }}{% endif %}</a>

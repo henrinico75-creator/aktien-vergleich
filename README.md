@@ -34,10 +34,14 @@ src/
   summarize.py      optional: eigene Kurzzusammenfassungen je Meldung,
                     nur mit ANTHROPIC_API_KEY, sonst no-op
   build.py          rendert templates/ nach dist/
-templates/          base, index, stock, etf, broker, legal, _calculator
+templates/          base, index, stock, etf, broker, legal, _calculator,
+                    _costtable (Jinja-Makro fuer die Kostentabelle je Volumen)
 content/            Impressum, Datenschutz, Werbehinweis (Markdown)
 scripts/umlaut_fix.py   ASCII-Umschrift -> echte Umlaute im sichtbaren Text
-static/style.css    Design
+static/style.css    Design, ein Stylesheet, drei Theme-Zustaende (System/hell/dunkel)
+static/app.js       Progressive Enhancement: Theme-Umschalter, Suche/Filter/
+                    Sortierung der Listen, Ordervolumen-Umschalter im Ergebnis-
+                    Panel. Ohne JavaScript bleibt jede Seite voll nutzbar.
 dist/               generierte Website, nicht in Git
 .github/workflows/  build-deploy.yml
 ```

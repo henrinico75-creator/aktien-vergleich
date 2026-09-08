@@ -4,39 +4,55 @@
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/broker/{{ broker.id }}/">{% endblock %}
 
 {% block content %}
-<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a> / Broker / {{ broker.name }}</nav>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Aktien</a> / <a href="{{ cfg.path_prefix }}/#broker">Broker</a> / {{ broker.name }}</nav>
 
 <section class="hero">
   <h1>{{ broker.name }}: Gebühren und Konditionen</h1>
+  <ul class="chips">
+    <li class="chip">Handelsplatz {{ broker.venue }}</li>
+    {% if broker.free_above is not none %}<li class="chip">0 EUR ab {{ broker.free_above|num(0) }} EUR</li>{% endif %}
+    {% if broker.subscription_eur %}<li class="chip">Abo {{ broker.subscription_eur|num }} EUR/Monat</li>{% endif %}
+  </ul>
   <p class="lede">{{ broker.note }}</p>
 </section>
 
 <section class="panel">
   <div class="panel-head"><h2>Gebührenmodell</h2><span class="badge">Beispieldaten</span></div>
-  <dl class="kv">
-    <div><dt>Typischer Handelsplatz</dt><dd>{{ broker.venue }}</dd></div>
-    <div><dt>Feste Ordergebühr</dt><dd>{{ broker.order_fixed|num }} EUR</dd></div>
-    <div><dt>Variabler Anteil</dt><dd>{{ (broker.order_pct * 100)|num(3) }} % vom Volumen</dd></div>
-    {% if broker.order_min %}<div><dt>Mindestgebühr</dt><dd>{{ broker.order_min|num }} EUR</dd></div>{% endif %}
-    {% if broker.order_max is not none %}<div><dt>Deckel</dt><dd>{{ broker.order_max|num }} EUR</dd></div>{% endif %}
-    {% if broker.free_above is not none %}<div><dt>Kostenlos ab</dt><dd>{{ broker.free_above|num(0) }} EUR Ordervolumen</dd></div>{% endif %}
-    <div><dt>Sparplan</dt><dd>{{ broker.savings_plan_fixed|num }} EUR je Ausführung</dd></div>
-    <div><dt>Monatliches Abo</dt><dd>{% if broker.subscription_eur %}{{ broker.subscription_eur|num }} EUR{% else %}keins{% endif %}</dd></div>
+  <dl class="stat-grid">
+    <div class="stat"><dt>Typischer Handelsplatz</dt><dd class="text">{{ broker.venue }}</dd></div>
+    <div class="stat"><dt>Feste Ordergebühr</dt><dd>{{ broker.order_fixed|num }} EUR</dd></div>
+    <div class="stat"><dt>Variabler Anteil</dt><dd>{{ (broker.order_pct * 100)|num(3) }} %</dd></div>
+    {% if broker.order_min %}<div class="stat"><dt>Mindestgebühr</dt><dd>{{ broker.order_min|num }} EUR</dd></div>{% endif %}
+    {% if broker.order_max is not none %}<div class="stat"><dt>Deckel</dt><dd>{{ broker.order_max|num }} EUR</dd></div>{% endif %}
+    {% if broker.free_above is not none %}<div class="stat"><dt>Kostenlos ab</dt><dd>{{ broker.free_above|num(0) }} EUR</dd></div>{% endif %}
+    <div class="stat"><dt>Sparplan</dt><dd>{{ broker.savings_plan_fixed|num }} EUR je Ausführung</dd></div>
+    <div class="stat"><dt>Monatliches Abo</dt><dd>{% if broker.subscription_eur %}{{ broker.subscription_eur|num }} EUR{% else %}keins{% endif %}</dd></div>
   </dl>
   <p class="foot-note">Grundlage: {{ broker.fee_basis }}. Vor einer Veröffentlichung gegen das Preis- und Leistungsverzeichnis prüfen.</p>
 </section>
 
 <section class="panel">
   <div class="panel-head"><h2>Kosten je Einmalkauf</h2></div>
+  {% set maxcost = sample | map(attribute=1) | max %}
   <div class="table-scroll">
     <table class="cmp">
-      <thead><tr><th class="num">Ordervolumen</th><th class="num">Kosten</th><th class="num">Anteil</th></tr></thead>
+      <thead>
+        <tr>
+          <th class="num">Ordervolumen</th>
+          <th class="num">Kosten</th>
+          <th class="num">Anteil</th>
+          <th class="costbar-cell"><span class="sr-only">Kostenbalken</span></th>
+        </tr>
+      </thead>
       <tbody>
         {% for size, cost in sample %}
         <tr>
           <td class="num">{{ size|num(0) }} EUR</td>
           <td class="num">{{ cost|eur }}</td>
           <td class="num">{{ (cost / size * 100)|num }} %</td>
+          <td class="costbar-cell">
+            <span class="costbar"><span class="costbar-fill" style="width: {{ (cost / maxcost * 100)|round(1) if maxcost else 0 }}%"></span></span>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -45,7 +61,7 @@
 </section>
 
 {% if broker.affiliate_url %}
-<section class="panel cta-panel">
+<section class="panel">
   <p>Depot bei {{ broker.name }} eröffnen:</p>
   <a class="cta" href="{{ broker.affiliate_url }}" rel="nofollow sponsored noopener" target="_blank">Zum Anbieter</a>
   <p class="foot-note">Werbelink. Bei Abschluss kann eine Vergütung an den Betreiber fließen, siehe Werbehinweis. Kein Einfluss auf die genannten Gebühren.</p>

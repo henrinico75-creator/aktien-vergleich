@@ -1,0 +1,39 @@
+{# Kostentabelle je Ordervolumen. Von stock.html und etf.html importiert.
+   block: {size, rows}; maxcost: hoechster Kostenwert im block (fuer den Balken). #}
+{% macro cost_table(block, maxcost) %}
+<div class="table-scroll">
+  <table class="cmp">
+    <thead>
+      <tr>
+        <th>Broker</th>
+        <th>Handelsplatz</th>
+        <th class="num">Kosten</th>
+        <th class="num">Anteil</th>
+        <th class="costbar-cell"><span class="sr-only">Kostenbalken</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for q in block.rows %}
+      <tr class="{{ 'best' if q.is_cheapest and q.cost > 0 else ('zero' if q.cost == 0 else '') }}">
+        <td>
+          <div class="bname">
+            {{ q.broker.name }}
+            {% if q.is_cheapest and q.cost > 0 %}<span class="tag">Günstigster</span>{% endif %}
+            {% if q.broker.subscription_eur and q.broker.subscription_eur > 0 %}
+              <span class="tag sub">+ {{ q.broker.subscription_eur|num }} EUR/Monat</span>
+            {% endif %}
+          </div>
+          <div class="note">{{ q.broker.note }}</div>
+        </td>
+        <td class="venue">{{ q.broker.venue }}</td>
+        <td class="num">{{ q.cost|eur }}</td>
+        <td class="num">{{ (q.cost_ratio * 100)|pct }}</td>
+        <td class="costbar-cell">
+          <span class="costbar"><span class="costbar-fill" style="width: {{ (q.cost / maxcost * 100)|round(1) if maxcost else 0 }}%"></span></span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endmacro %}

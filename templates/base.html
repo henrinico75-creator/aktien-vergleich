@@ -5,21 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{{ cfg.site_name }}{% endblock %}</title>
 <meta name="description" content="{% block description %}{{ cfg.tagline }}{% endblock %}">
+<meta name="color-scheme" content="light dark">
 {% block canonical %}{% endblock %}
+<script>
+  /* Theme vor dem ersten Paint setzen, damit es nicht flackert. */
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="{{ cfg.path_prefix }}/static/style.css">
 </head>
 <body>
 <header class="site-head">
-  <div class="wrap head-inner">
-    <a class="brand" href="{{ cfg.path_prefix }}/">{{ cfg.site_name }}</a>
-    <nav class="site-nav" aria-label="Hauptnavigation"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a></nav>
+  <div class="head-inner">
+    <a class="brand" href="{{ cfg.path_prefix }}/" aria-label="{{ cfg.site_name }}, Startseite">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <rect x="2" y="11" width="4" height="7" rx="1" fill="currentColor" opacity=".45"/>
+        <rect x="8" y="7" width="4" height="11" rx="1" fill="currentColor" opacity=".7"/>
+        <rect x="14" y="3" width="4" height="15" rx="1" fill="var(--brand)"/>
+      </svg>
+      <span>Aktien<span class="dot">&middot;</span>Kosten</span>
+    </a>
+    <nav class="site-nav" aria-label="Hauptnavigation">
+      <a href="{{ cfg.path_prefix }}/">Aktien</a>
+      <a href="{{ cfg.path_prefix }}/#etfs">ETFs</a>
+      <a href="{{ cfg.path_prefix }}/#broker">Broker</a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Farbschema wechseln" title="Farbschema: System">&#x25D0;</button>
+    </nav>
   </div>
 </header>
 {% if cfg.prototype_banner %}
-<div class="banner">
+<div class="notice">
   <div class="wrap">Prototyp. Broker-Gebühren und Kennzahlen sind noch nicht abschließend geprüft.</div>
 </div>
 {% endif %}
@@ -41,5 +61,6 @@
     <p class="built">Seitenbau: {{ built_at }}. Betreiber: {{ cfg.owner_name }}.</p>
   </div>
 </footer>
+<script src="{{ cfg.path_prefix }}/static/app.js" defer></script>
 </body>
 </html>

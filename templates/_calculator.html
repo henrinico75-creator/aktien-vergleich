@@ -1,5 +1,5 @@
 {# Interaktiver Broker-Kostenrechner. Erwartet brokers_json im Kontext. #}
-<section class="panel">
+<section class="panel" id="rechner">
   <div class="panel-head"><h2>Eigenes Ordervolumen rechnen</h2></div>
   <div class="calc">
     <label for="calc-vol">Ordervolumen <span id="calc-out" class="mono">1.000 EUR</span></label>
@@ -9,17 +9,28 @@
   <div class="table-scroll">
     <table class="cmp" id="calc-table">
       <thead>
-        <tr><th>Broker</th><th class="num">Kosten</th><th class="num">Anteil</th><th class="num"><span class="sr-only">Link zum Anbieter</span></th></tr>
+        <tr>
+          <th>Broker</th>
+          <th class="num">Kosten</th>
+          <th class="num">Anteil</th>
+          <th class="costbar-cell"><span class="sr-only">Kostenbalken</span></th>
+          <th class="num"><span class="sr-only">Link zum Anbieter</span></th>
+        </tr>
       </thead>
       <tbody id="calc-rows"></tbody>
     </table>
   </div>
-  <p class="foot-note">Rechnet dieselbe Formel wie die Tabelle oben, im Browser. Ohne JavaScript bleiben die festen Volumina oben maßgeblich.</p>
+  <p class="foot-note">
+    Rechnet dieselbe Formel wie die Tabelle oben, im Browser. Der Balken zeigt
+    die Orderkosten im Verhältnis zum teuersten hier gelisteten Broker. Ohne
+    JavaScript bleiben die festen Volumina oben maßgeblich.
+  </p>
 </section>
 
 <script>
 (function () {
   var brokers = {{ brokers_json|safe }};
+  window.__brokers = brokers;
   var deEUR = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2});
   var deInt = new Intl.NumberFormat("de-DE");
   var dePct = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -48,6 +59,7 @@
     out.textContent = deInt.format(v) + " EUR";
     var list = brokers.map(function (b) { return {b: b, c: orderCost(b, v)}; });
     var min = Math.min.apply(null, list.map(function (x) { return x.c; }));
+    var max = Math.max.apply(null, list.map(function (x) { return x.c; }));
     list.sort(function (a, b) { return a.c - b.c || a.b.name.localeCompare(b.b.name, "de"); });
     rows.innerHTML = "";
     list.forEach(function (x) {
@@ -55,6 +67,7 @@
       var best = Math.abs(x.c - min) < 1e-9;
       if (best && x.c > 0) tr.className = "best";
       else if (x.c === 0) tr.className = "zero";
+      var pct = max > 0 ? (x.c / max * 100) : 0;
       var link = x.b.affiliate_url
         ? '<a class="mini-cta" href="' + esc(x.b.affiliate_url) + '" rel="nofollow sponsored noopener" target="_blank">zum Anbieter</a>'
         : '';
@@ -64,6 +77,7 @@
         '</div><div class="note">' + esc(x.b.note) + '</div></td>' +
         '<td class="num">' + deEUR.format(x.c) + ' EUR</td>' +
         '<td class="num">' + dePct.format(v ? (x.c / v * 100) : 0) + ' %</td>' +
+        '<td class="costbar-cell"><span class="costbar"><span class="costbar-fill" style="width:' + pct.toFixed(1) + '%"></span></span></td>' +
         '<td class="num">' + link + '</td>';
       rows.appendChild(tr);
     });

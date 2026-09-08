@@ -19,19 +19,36 @@
   </p>
 </section>
 
-<section class="panel">
+<section class="panel" id="aktien" data-listing>
   <div class="panel-head"><h2>Alle Aktien</h2></div>
+  <div class="filterbar">
+    <div class="field grow">
+      <label for="f-stock">Suche</label>
+      <input type="search" id="f-stock" placeholder="Name, WKN oder ISIN" data-filter-search autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="f-sector">Branche</label>
+      <select id="f-sector" data-filter-sector><option value="">Alle</option></select>
+    </div>
+  </div>
+  <p class="filter-count" data-filter-count>{{ overview|length }} Einträge</p>
   <div class="table-scroll">
     <table class="listing">
       <thead>
-        <tr><th>Aktie</th><th>WKN</th><th>Branche</th><th class="num">Kurs</th></tr>
+        <tr>
+          <th data-sort="name">Aktie</th>
+          <th>WKN</th>
+          <th data-sort="sector">Branche</th>
+          <th class="num" data-sort="price">Kurs</th>
+        </tr>
       </thead>
       <tbody>
         {% for row in overview %}
-        <tr>
-          <td>
-            <a class="listing-link" href="{{ cfg.path_prefix }}/aktie/{{ row.stock.slug }}/">{{ row.stock.name }}</a>
-          </td>
+        <tr data-sector="{{ row.stock.sector }}"
+            data-name="{{ row.stock.name }}"
+            data-price="{{ row.data.price if row.has_data and row.data.price is not none else '' }}"
+            data-search="{{ row.stock.name }} {{ row.stock.wkn }} {{ row.stock.isin }} {{ row.stock.sector }}">
+          <td><a class="listing-link" href="{{ cfg.path_prefix }}/aktie/{{ row.stock.slug }}/">{{ row.stock.name }}</a></td>
           <td class="mono">{{ row.stock.wkn }}</td>
           <td>{{ row.stock.sector }}</td>
           <td class="num">
@@ -48,19 +65,33 @@
   </div>
 </section>
 
-<section class="panel">
+<section class="panel" id="etfs" data-listing>
   <div class="panel-head"><h2>Alle ETFs</h2></div>
+  <div class="filterbar">
+    <div class="field grow">
+      <label for="f-etf">Suche</label>
+      <input type="search" id="f-etf" placeholder="Name, Index oder ISIN" data-filter-search autocomplete="off">
+    </div>
+  </div>
+  <p class="filter-count" data-filter-count>{{ etf_overview|length }} Einträge</p>
   <div class="table-scroll">
     <table class="listing">
       <thead>
-        <tr><th>ETF</th><th>Index</th><th class="num">TER</th><th class="num">Kurs</th></tr>
+        <tr>
+          <th data-sort="name">ETF</th>
+          <th data-sort="index">Index</th>
+          <th class="num" data-sort="ter">TER</th>
+          <th class="num" data-sort="price">Kurs</th>
+        </tr>
       </thead>
       <tbody>
         {% for row in etf_overview %}
-        <tr>
-          <td>
-            <a class="listing-link" href="{{ cfg.path_prefix }}/etf/{{ row.etf.slug }}/">{{ row.etf.name }}</a>
-          </td>
+        <tr data-name="{{ row.etf.name }}"
+            data-index="{{ row.etf.index }}"
+            data-ter="{{ row.etf.ter }}"
+            data-price="{{ row.data.price if row.has_data and row.data.price is not none else '' }}"
+            data-search="{{ row.etf.name }} {{ row.etf.index }} {{ row.etf.isin }}">
+          <td><a class="listing-link" href="{{ cfg.path_prefix }}/etf/{{ row.etf.slug }}/">{{ row.etf.name }}</a></td>
           <td>{{ row.etf.index }}</td>
           <td class="num">{{ row.etf.ter|num }} %</td>
           <td class="num">
@@ -77,9 +108,9 @@
   </div>
 </section>
 
-<section class="panel">
+<section class="panel" id="broker">
   <div class="panel-head"><h2>Broker im Vergleich</h2></div>
-  <p class="muted">Diese Gebührenmodelle liegen jeder Aktienseite zugrunde.</p>
+  <p class="panel-lead">Diese Gebührenmodelle liegen jeder Aktien- und ETF-Seite zugrunde.</p>
   <div class="table-scroll">
     <table class="listing">
       <thead>
@@ -89,7 +120,7 @@
         {% for b in brokers %}
         <tr>
           <td><a class="listing-link" href="{{ cfg.path_prefix }}/broker/{{ b.id }}/">{{ b.name }}</a></td>
-          <td>{{ b.venue }}</td>
+          <td class="venue">{{ b.venue }}</td>
           <td class="muted">{{ b.note }}</td>
         </tr>
         {% endfor %}

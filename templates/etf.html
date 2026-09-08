@@ -1,15 +1,28 @@
 {% extends "base.html" %}
+{% import "_costtable.html" as ct %}
 {% set cur = data.currency or etf.currency %}
+{% set ref_size = 1000 if 1000 in sizes else sizes[0] %}
+{% set ref = (matrix | selectattr('size', 'equalto', ref_size) | list | first) %}
+{% set rrows = ref.rows %}
+{% set best_cost = rrows[0].cost %}
+{% set best = rrows | selectattr('cost', 'equalto', best_cost) | list %}
+{% set rest = rrows[best|length : best|length + 3] %}
 {% block title %}{{ etf.name }} kaufen: Broker-Kostenvergleich | {{ cfg.site_name }}{% endblock %}
 {% block description %}{{ etf.name }} (ISIN {{ etf.isin }}) günstig kaufen: Ordergebühren im Broker-Vergleich, TER, Replikation und Ertragsverwendung.{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/etf/{{ etf.slug }}/">{% endblock %}
 
 {% block content %}
-<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a> / ETF / {{ etf.name }}</nav>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Aktien</a> / <a href="{{ cfg.path_prefix }}/#etfs">ETFs</a> / {{ etf.name }}</nav>
 
 <section class="hero">
   <h1>{{ etf.name }} kaufen: Kosten je Broker</h1>
-  <p class="ident mono">WKN {{ etf.wkn }} &middot; ISIN {{ etf.isin }} &middot; Ticker {{ etf.ticker }} &middot; {{ etf.index }}</p>
+  <ul class="chips">
+    <li class="chip">WKN {{ etf.wkn }}</li>
+    <li class="chip">ISIN {{ etf.isin }}</li>
+    <li class="chip">Ticker {{ etf.ticker }}</li>
+    <li class="chip">{{ etf.index }}</li>
+    <li class="chip">TER {{ etf.ter|num }} % p.a.</li>
+  </ul>
   {% if has_data %}
   <p class="hero-note">
     Kurs {{ data.price|num }} {{ cur }}. Laufende Kosten (TER) {{ etf.ter|num }} % pro Jahr.
@@ -20,19 +33,48 @@
   {% endif %}
 </section>
 
+<section class="result" data-result aria-labelledby="result-label">
+  <p class="result-label" id="result-label">Am günstigsten &middot; Einmalkauf <span data-ref-size>{{ ref_size|num(0) }} EUR</span></p>
+  <div class="result-main">
+    <span class="result-who" data-result-who>
+      {%- if best|length > 1 -%}{{ best|length }} Broker gleichauf{%- else -%}{{ best[0].broker.name }}{%- endif -%}
+    </span>
+    <span class="result-cost" data-result-cost>{{ best_cost|eur }}</span>
+  </div>
+  <p class="result-meta" data-result-meta>
+    {%- if best|length > 1 -%}
+      {{ best[:3] | map(attribute='broker.name') | join(', ') }}{% if best|length > 3 %} und weitere{% endif %}
+    {%- else -%}
+      {{ best[0].broker.venue }} &middot; {{ (best[0].cost_ratio * 100)|pct }} % vom Ordervolumen
+    {%- endif -%}
+  </p>
+  <div class="result-sizes" data-result-sizes hidden>
+    {% for s in sizes %}
+    <button type="button" data-size="{{ s }}" aria-pressed="{{ 'true' if s == ref_size else 'false' }}">{{ s|num(0) }} EUR</button>
+    {% endfor %}
+  </div>
+  <p class="result-alt" data-result-alt>
+    {%- if rest -%}Danach: <strong>{{ rest | map(attribute='broker.name') | join('</strong>, <strong>') | safe }}</strong>.{%- endif -%}
+  </p>
+  <div class="result-foot">
+    <span>Beispieldaten. Bei einem Sparplan zählt vor allem die TER, nicht die Ordergebühr.</span>
+    <a href="#rechner">Eigenes Volumen rechnen</a>
+  </div>
+</section>
+
 <section class="panel">
   <div class="panel-head"><h2>ETF-Merkmale</h2><span class="badge">Beispieldaten</span></div>
-  <dl class="kv">
-    <div><dt>Abgebildeter Index</dt><dd>{{ etf.index }}</dd></div>
-    <div><dt>Laufende Kosten (TER)</dt><dd>{{ etf.ter|num }} % p.a.</dd></div>
-    <div><dt>Replikation</dt><dd>{{ etf.replication }}</dd></div>
-    <div><dt>Ertragsverwendung</dt><dd>{{ etf.distribution }}</dd></div>
-    <div><dt>Fondsdomizil</dt><dd>{{ etf.domicile }}</dd></div>
+  <dl class="stat-grid">
+    <div class="stat"><dt>Abgebildeter Index</dt><dd class="text">{{ etf.index }}</dd></div>
+    <div class="stat"><dt>Laufende Kosten (TER)</dt><dd>{{ etf.ter|num }} % p.a.</dd></div>
+    <div class="stat"><dt>Replikation</dt><dd class="text">{{ etf.replication }}</dd></div>
+    <div class="stat"><dt>Ertragsverwendung</dt><dd class="text">{{ etf.distribution }}</dd></div>
+    <div class="stat"><dt>Fondsdomizil</dt><dd class="text">{{ etf.domicile }}</dd></div>
     {% if has_data and data.dividend_yield_pct is not none %}
-    <div><dt>Ausschüttungsrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
+    <div class="stat"><dt>Ausschüttungsrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
     {% endif %}
     {% if has_data and data.price is not none %}
-    <div><dt>Kurs</dt><dd>{{ data.price|num }} {{ cur }}</dd></div>
+    <div class="stat"><dt>Kurs</dt><dd>{{ data.price|num }} {{ cur }}</dd></div>
     {% endif %}
   </dl>
   <p class="foot-note">{{ etf.note }} TER, Replikation und Ertragsverwendung vor einer Kaufentscheidung im KIID bzw. Factsheet des Anbieters prüfen.</p>
@@ -43,41 +85,30 @@
     <h2>Ordergebühren beim Einmalkauf</h2>
     <span class="badge">Beispieldaten</span>
   </div>
-  <p class="muted">
-    Gesamtkosten einer einzelnen Kauforder über die genannten Beträge. Ohne
-    Depotgebühren, ohne Spread, ohne monatliche Abos. Bei einem ETF ist die
-    laufende Kostenquote (TER {{ etf.ter|num }} % pro Jahr) meist der größere
-    Posten als die einmalige Ordergebühr.
+  <p class="panel-lead">
+    Gesamtkosten einer einzelnen Kauforder. Ohne Depotgebühren, ohne Spread,
+    ohne monatliche Abos. Bei einem ETF ist die laufende Kostenquote
+    (TER {{ etf.ter|num }} % pro Jahr) meist der größere Posten als die einmalige
+    Ordergebühr. Der Balken zeigt die Kosten im Verhältnis zum teuersten hier
+    gelisteten Broker.
   </p>
 
   {% for block in matrix %}
+  {% set maxcost = block.rows | map(attribute='cost') | max %}
+  {% if block.size == ref_size %}
   <h3 class="matrix-size">Ordervolumen {{ block.size|num(0) }} EUR</h3>
-  <div class="table-scroll">
-    <table class="cmp">
-      <thead>
-        <tr><th>Broker</th><th>Handelsplatz</th><th class="num">Kosten</th><th class="num">Anteil</th></tr>
-      </thead>
-      <tbody>
-        {% for q in block.rows %}
-        <tr class="{{ 'best' if q.is_cheapest and q.cost > 0 else ('zero' if q.cost == 0 else '') }}">
-          <td>
-            <div class="bname">
-              {{ q.broker.name }}
-              {% if q.is_cheapest and q.cost > 0 %}<span class="tag">Günstigster</span>{% endif %}
-              {% if q.broker.subscription_eur and q.broker.subscription_eur > 0 %}
-                <span class="tag sub">+ {{ q.broker.subscription_eur|num }} EUR/Monat</span>
-              {% endif %}
-            </div>
-            <div class="note">{{ q.broker.note }}</div>
-          </td>
-          <td class="venue">{{ q.broker.venue }}</td>
-          <td class="num">{{ q.cost|eur }}</td>
-          <td class="num">{{ (q.cost_ratio * 100)|pct }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  {{ ct.cost_table(block, maxcost) }}
+  {% endif %}
+  {% endfor %}
+
+  {% for block in matrix %}
+  {% set maxcost = block.rows | map(attribute='cost') | max %}
+  {% if block.size != ref_size %}
+  <details class="more">
+    <summary>Ordervolumen {{ block.size|num(0) }} EUR anzeigen</summary>
+    {{ ct.cost_table(block, maxcost) }}
+  </details>
+  {% endif %}
   {% endfor %}
 
   <p class="foot-note">
