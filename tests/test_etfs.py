@@ -11,7 +11,7 @@ def test_load_etfs_liest_die_echte_datei():
         assert isinstance(e, Etf)
         assert e.name and e.ticker and e.isin and e.index
         assert 0 < e.ter < 3, f"TER unplausibel bei {e.slug}: {e.ter}"
-        assert e.distribution in {"thesaurierend", "ausschuettend"}
+        assert e.distribution in {"thesaurierend", "ausschüttend"}
 
 
 def test_etf_und_aktien_slugs_kollidieren_nicht():

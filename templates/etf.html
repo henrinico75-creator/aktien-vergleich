@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set cur = data.currency or etf.currency %}
 {% block title %}{{ etf.name }} kaufen: Broker-Kostenvergleich | {{ cfg.site_name }}{% endblock %}
-{% block description %}{{ etf.name }} (ISIN {{ etf.isin }}) guenstig kaufen: Ordergebuehren im Broker-Vergleich, TER, Replikation und Ertragsverwendung.{% endblock %}
+{% block description %}{{ etf.name }} (ISIN {{ etf.isin }}) günstig kaufen: Ordergebühren im Broker-Vergleich, TER, Replikation und Ertragsverwendung.{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/etf/{{ etf.slug }}/">{% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
     Datenquelle {{ data.source }}, Stand {{ data.fetched_at }}.
   </p>
   {% else %}
-  <p class="hero-note warn">Kurs fuer diesen ETF wird noch geladen. Die Kostentabelle unten ist davon unabhaengig.</p>
+  <p class="hero-note warn">Kurs für diesen ETF wird noch geladen. Die Kostentabelle unten ist davon unabhängig.</p>
   {% endif %}
 </section>
 
@@ -29,25 +29,25 @@
     <div><dt>Ertragsverwendung</dt><dd>{{ etf.distribution }}</dd></div>
     <div><dt>Fondsdomizil</dt><dd>{{ etf.domicile }}</dd></div>
     {% if has_data and data.dividend_yield_pct is not none %}
-    <div><dt>Ausschuettungsrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
+    <div><dt>Ausschüttungsrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
     {% endif %}
     {% if has_data and data.price is not none %}
     <div><dt>Kurs</dt><dd>{{ data.price|num }} {{ cur }}</dd></div>
     {% endif %}
   </dl>
-  <p class="foot-note">{{ etf.note }} TER, Replikation und Ertragsverwendung vor einer Kaufentscheidung im KIID bzw. Factsheet des Anbieters pruefen.</p>
+  <p class="foot-note">{{ etf.note }} TER, Replikation und Ertragsverwendung vor einer Kaufentscheidung im KIID bzw. Factsheet des Anbieters prüfen.</p>
 </section>
 
 <section class="panel">
   <div class="panel-head">
-    <h2>Ordergebuehren beim Einmalkauf</h2>
+    <h2>Ordergebühren beim Einmalkauf</h2>
     <span class="badge">Beispieldaten</span>
   </div>
   <p class="muted">
-    Gesamtkosten einer einzelnen Kauforder ueber die genannten Betraege. Ohne
-    Depotgebuehren, ohne Spread, ohne monatliche Abos. Bei einem ETF ist die
-    laufende Kostenquote (TER {{ etf.ter|num }} % pro Jahr) meist der groessere
-    Posten als die einmalige Ordergebuehr.
+    Gesamtkosten einer einzelnen Kauforder über die genannten Beträge. Ohne
+    Depotgebühren, ohne Spread, ohne monatliche Abos. Bei einem ETF ist die
+    laufende Kostenquote (TER {{ etf.ter|num }} % pro Jahr) meist der größere
+    Posten als die einmalige Ordergebühr.
   </p>
 
   {% for block in matrix %}
@@ -63,7 +63,7 @@
           <td>
             <div class="bname">
               {{ q.broker.name }}
-              {% if q.is_cheapest and q.cost > 0 %}<span class="tag">Guenstigster</span>{% endif %}
+              {% if q.is_cheapest and q.cost > 0 %}<span class="tag">Günstigster</span>{% endif %}
               {% if q.broker.subscription_eur and q.broker.subscription_eur > 0 %}
                 <span class="tag sub">+ {{ q.broker.subscription_eur|num }} EUR/Monat</span>
               {% endif %}
@@ -81,15 +81,15 @@
   {% endfor %}
 
   <p class="foot-note">
-    ETF-Sparplaene sind bei allen hier gelisteten Neobrokern kostenlos. Fuer
-    einen langfristigen Sparplan zaehlt vor allem die TER, nicht die einmalige
-    Ordergebuehr.
+    ETF-Sparpläne sind bei allen hier gelisteten Neobrokern kostenlos. Für
+    einen langfristigen Sparplan zählt vor allem die TER, nicht die einmalige
+    Ordergebühr.
   </p>
 </section>
 
 {% include "_calculator.html" %}
 
 <section class="disclaimer-box">
-  <p><strong>Keine Anlageberatung.</strong> Diese Seite vergleicht Kosten und stellt Fakten zusammen. Sie enthaelt keine Kauf- oder Verkaufsempfehlung und keine Order- oder Zahlungsfunktion.</p>
+  <p><strong>Keine Anlageberatung.</strong> Diese Seite vergleicht Kosten und stellt Fakten zusammen. Sie enthält keine Kauf- oder Verkaufsempfehlung und keine Order- oder Zahlungsfunktion.</p>
 </section>
 {% endblock %}

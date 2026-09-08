@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set cur = data.currency or stock.currency %}
 {% block title %}{{ stock.name }} Aktie kaufen: Broker-Kostenvergleich | {{ cfg.site_name }}{% endblock %}
-{% block description %}{{ stock.name }} (WKN {{ stock.wkn }}) guenstig kaufen: Ordergebuehren im Broker-Vergleich, Kennzahlen, Dividende und aktuelle Meldungen.{% endblock %}
+{% block description %}{{ stock.name }} (WKN {{ stock.wkn }}) günstig kaufen: Ordergebühren im Broker-Vergleich, Kennzahlen, Dividende und aktuelle Meldungen.{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/aktie/{{ stock.slug }}/">{% endblock %}
 
 {% block content %}
@@ -16,18 +16,18 @@
     Datenquelle {{ data.source }}, Stand {{ data.fetched_at }}.
   </p>
   {% else %}
-  <p class="hero-note warn">Kurszahlen fuer diese Aktie werden noch geladen. Die Kostentabelle unten ist davon unabhaengig.</p>
+  <p class="hero-note warn">Kurszahlen für diese Aktie werden noch geladen. Die Kostentabelle unten ist davon unabhängig.</p>
   {% endif %}
 </section>
 
 <section class="panel">
   <div class="panel-head">
-    <h2>Ordergebuehren beim Einmalkauf</h2>
+    <h2>Ordergebühren beim Einmalkauf</h2>
     <span class="badge">Beispieldaten</span>
   </div>
   <p class="muted">
-    Gesamtkosten einer einzelnen Kauforder ueber die genannten Betraege. Ohne
-    Depotgebuehren, ohne Spread, ohne monatliche Abos. Diese sind je Broker
+    Gesamtkosten einer einzelnen Kauforder über die genannten Beträge. Ohne
+    Depotgebühren, ohne Spread, ohne monatliche Abos. Diese sind je Broker
     gesondert vermerkt.
   </p>
 
@@ -44,7 +44,7 @@
           <td>
             <div class="bname">
               {{ q.broker.name }}
-              {% if q.is_cheapest and q.cost > 0 %}<span class="tag">Guenstigster</span>{% endif %}
+              {% if q.is_cheapest and q.cost > 0 %}<span class="tag">Günstigster</span>{% endif %}
               {% if q.broker.subscription_eur and q.broker.subscription_eur > 0 %}
                 <span class="tag sub">+ {{ q.broker.subscription_eur|num }} EUR/Monat</span>
               {% endif %}
@@ -62,9 +62,9 @@
   {% endfor %}
 
   <p class="foot-note">
-    Sparplaene sind bei allen hier gelisteten Neobrokern kostenlos. Der
-    Unterschied liegt dann bei Titelauswahl, Ausfuehrungstagen und
-    Bruchstueckhandel, nicht beim Preis.
+    Sparpläne sind bei allen hier gelisteten Neobrokern kostenlos. Der
+    Unterschied liegt dann bei Titelauswahl, Ausführungstagen und
+    Bruchstückhandel, nicht beim Preis.
   </p>
 </section>
 
@@ -80,11 +80,11 @@
     <div><dt>KGV (erwartet)</dt><dd>{{ data.pe_forward|num }}</dd></div>
     <div><dt>Kurs-Buchwert</dt><dd>{{ data.price_to_book|num }}</dd></div>
     <div><dt>Dividendenrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
-    <div><dt>Ausschuettungsquote</dt><dd>{{ (data.payout_ratio * 100)|pct if data.payout_ratio is not none else 'n/a' }}</dd></div>
+    <div><dt>Ausschüttungsquote</dt><dd>{{ (data.payout_ratio * 100)|pct if data.payout_ratio is not none else 'n/a' }}</dd></div>
   </dl>
-  <p class="foot-note">Quelle {{ data.source }}, Stand {{ data.fetched_at }}. KGV und Kennzahlen koennen je nach Datenanbieter abweichen (anderer Stichtag, andere Bereinigung).</p>
+  <p class="foot-note">Quelle {{ data.source }}, Stand {{ data.fetched_at }}. KGV und Kennzahlen können je nach Datenanbieter abweichen (anderer Stichtag, andere Bereinigung).</p>
   {% else %}
-  <p class="muted">Sobald der Datenlauf fuer {{ stock.name }} durchgelaufen ist, stehen hier Kurs, Marktkapitalisierung, KGV, Kurs-Buchwert, Dividendenrendite und Ausschuettungsquote mit Quellenangabe und Stand.</p>
+  <p class="muted">Sobald der Datenlauf für {{ stock.name }} durchgelaufen ist, stehen hier Kurs, Marktkapitalisierung, KGV, Kurs-Buchwert, Dividendenrendite und Ausschüttungsquote mit Quellenangabe und Stand.</p>
   {% endif %}
 </section>
 
@@ -101,7 +101,7 @@
       </tbody>
     </table>
   </div>
-  <p class="foot-note">Quelle {{ data.source }}. Ex-Tag-Angaben, keine Zusage kuenftiger Zahlungen.</p>
+  <p class="foot-note">Quelle {{ data.source }}. Ex-Tag-Angaben, keine Zusage künftiger Zahlungen.</p>
 </section>
 {% endif %}
 
@@ -125,9 +125,9 @@
   </div>
   <p class="foot-note">
     {% if data.news[0].summary %}
-    Zusammenfassungen in eigenen Worten auf Basis der verlinkten Quelle, kein uebernommener Artikeltext.
+    Zusammenfassungen in eigenen Worten auf Basis der verlinkten Quelle, kein übernommener Artikeltext.
     {% else %}
-    Derzeit die Schlagzeile der Quelle. Eigene Kurzzusammenfassungen werden ergaenzt, kein uebernommener Artikeltext.
+    Derzeit die Schlagzeile der Quelle. Eigene Kurzzusammenfassungen werden ergänzt, kein übernommener Artikeltext.
     {% endif %}
   </p>
   {% else %}
@@ -136,6 +136,6 @@
 </section>
 
 <section class="disclaimer-box">
-  <p><strong>Keine Anlageberatung.</strong> Diese Seite vergleicht Kosten und stellt Fakten zusammen. Sie enthaelt keine Kauf- oder Verkaufsempfehlung und keine Order- oder Zahlungsfunktion.</p>
+  <p><strong>Keine Anlageberatung.</strong> Diese Seite vergleicht Kosten und stellt Fakten zusammen. Sie enthält keine Kauf- oder Verkaufsempfehlung und keine Order- oder Zahlungsfunktion.</p>
 </section>
 {% endblock %}

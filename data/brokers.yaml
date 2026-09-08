@@ -1,24 +1,24 @@
-# Gebuehrenmodelle je Broker. Handgepflegt.
+# Gebührenmodelle je Broker. Handgepflegt.
 #
-# WICHTIG: Die Werte sind Startwerte mit grobem Stand Anfang 2026 und muessen
-# vor einer Veroeffentlichung Zeile fuer Zeile gegen das Preis- und
-# Leistungsverzeichnis des jeweiligen Anbieters geprueft werden. Danach
+# WICHTIG: Die Werte sind Startwerte mit grobem Stand Anfang 2026 und müssen
+# vor einer Veröffentlichung Zeile für Zeile gegen das Preis- und
+# Leistungsverzeichnis des jeweiligen Anbieters geprüft werden. Danach
 # quartalsweise nachziehen und feld `fee_basis` mit Datum aktualisieren.
 #
 # Felder:
 #   id                 stabiler Slug, wird zur URL /broker/<id>/
 #   name               Anzeigename
-#   venue              typischer Handelsplatz fuer diese Konditionen
-#   order_fixed        feste Ordergebuehr in EUR (Einmalkauf)
+#   venue              typischer Handelsplatz für diese Konditionen
+#   order_fixed        feste Ordergebühr in EUR (Einmalkauf)
 #   order_pct          variabler Anteil vom Ordervolumen (0.0025 = 0,25 %)
-#   order_min          Untergrenze der Gesamt-Ordergebuehr in EUR (0 = keine)
+#   order_min          Untergrenze der Gesamt-Ordergebühr in EUR (0 = keine)
 #   order_max          Obergrenze in EUR (null = keine)
 #   free_above         ab diesem Ordervolumen 0 EUR (null = nie)
-#   savings_plan_fixed feste Gebuehr je Sparplanausfuehrung in EUR
-#   savings_plan_pct   variabler Anteil je Sparplanausfuehrung
+#   savings_plan_fixed feste Gebühr je Sparplanausführung in EUR
+#   savings_plan_pct   variabler Anteil je Sparplanausführung
 #   subscription_eur   monatliches Abo in EUR (0 = keins)
 #   affiliate_url      echter Partnerlink, erst nach Programm-Aufnahme; sonst null
-#   note               kurze Einordnung fuer die Tabelle
+#   note               kurze Einordnung für die Tabelle
 #   fee_basis          Quelle und Stand der Zahlen
 
 brokers:
@@ -35,7 +35,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "1 EUR Fremdkostenpauschale je Order. Sparplan kostenlos."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: scalable-free
     name: "Scalable Capital (Free Broker)"
@@ -50,7 +50,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "0,99 EUR je Order. Sparplan kostenlos."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: scalable-prime
     name: "Scalable Capital (PRIME+)"
@@ -65,7 +65,7 @@ brokers:
     subscription_eur: 4.99
     affiliate_url: null
     note: "0 EUR ab 250 EUR Ordervolumen. Abo 4,99 EUR im Monat."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: finanzen-net-zero
     name: "Finanzen.net Zero"
@@ -80,7 +80,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "0 EUR ab 500 EUR Ordervolumen, sonst 1 EUR. Sparplan kostenlos."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: justtrade
     name: "justTRADE"
@@ -95,7 +95,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "0 EUR Orderprovision. Kosten stecken im Spread."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: traders-place
     name: "Traders Place"
@@ -110,7 +110,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "0 EUR ab 500 EUR Ordervolumen, sonst 0,90 EUR. Sparplan kostenlos."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: smartbroker-plus
     name: "Smartbroker+"
@@ -125,7 +125,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "0 EUR ab 500 EUR Ordervolumen, sonst 1 EUR."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: dkb
     name: "DKB"
@@ -140,7 +140,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "3,49 EUR je Order (Aktionskondition). Sparplan kostenlos."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: comdirect
     name: "comdirect"
@@ -154,8 +154,8 @@ brokers:
     savings_plan_pct: 0.0
     subscription_eur: 0.0
     affiliate_url: null
-    note: "3,90 EUR Aktionspreis. Regulaer hoeher und volumenabhaengig."
-    fee_basis: "grob Anfang 2026, Aktionspreis, VOR LAUNCH PRUEFEN"
+    note: "3,90 EUR Aktionspreis. Regulär höher und volumenabhängig."
+    fee_basis: "grob Anfang 2026, Aktionspreis, VOR LAUNCH PRÜFEN"
 
   - id: ing
     name: "ING"
@@ -170,7 +170,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "4,90 EUR + 0,25 % vom Kurswert, gedeckelt bei 69,90 EUR. Sparplan kostenlos."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: consorsbank
     name: "Consorsbank"
@@ -185,7 +185,7 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "4,95 EUR + 0,25 %, mindestens 9,95 EUR. Sparplan kostenlos."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"
 
   - id: flatex
     name: "flatex"
@@ -200,4 +200,4 @@ brokers:
     subscription_eur: 0.0
     affiliate_url: null
     note: "5,90 EUR je Order zzgl. Handelsplatzentgelt. Sparplan kostenlos."
-    fee_basis: "grob Anfang 2026, VOR LAUNCH PRUEFEN"
+    fee_basis: "grob Anfang 2026, VOR LAUNCH PRÜFEN"

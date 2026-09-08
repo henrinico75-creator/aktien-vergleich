@@ -1,29 +1,29 @@
 {% extends "base.html" %}
-{% block title %}{{ broker.name }}: Ordergebuehren und Konditionen | {{ cfg.site_name }}{% endblock %}
-{% block description %}{{ broker.name }} Ordergebuehren im Ueberblick: {{ broker.note }}{% endblock %}
+{% block title %}{{ broker.name }}: Ordergebühren und Konditionen | {{ cfg.site_name }}{% endblock %}
+{% block description %}{{ broker.name }} Ordergebühren im Überblick: {{ broker.note }}{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/broker/{{ broker.id }}/">{% endblock %}
 
 {% block content %}
 <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Alle Aktien</a> / Broker / {{ broker.name }}</nav>
 
 <section class="hero">
-  <h1>{{ broker.name }}: Gebuehren und Konditionen</h1>
+  <h1>{{ broker.name }}: Gebühren und Konditionen</h1>
   <p class="lede">{{ broker.note }}</p>
 </section>
 
 <section class="panel">
-  <div class="panel-head"><h2>Gebuehrenmodell</h2><span class="badge">Beispieldaten</span></div>
+  <div class="panel-head"><h2>Gebührenmodell</h2><span class="badge">Beispieldaten</span></div>
   <dl class="kv">
     <div><dt>Typischer Handelsplatz</dt><dd>{{ broker.venue }}</dd></div>
-    <div><dt>Feste Ordergebuehr</dt><dd>{{ broker.order_fixed|num }} EUR</dd></div>
+    <div><dt>Feste Ordergebühr</dt><dd>{{ broker.order_fixed|num }} EUR</dd></div>
     <div><dt>Variabler Anteil</dt><dd>{{ (broker.order_pct * 100)|num(3) }} % vom Volumen</dd></div>
-    {% if broker.order_min %}<div><dt>Mindestgebuehr</dt><dd>{{ broker.order_min|num }} EUR</dd></div>{% endif %}
+    {% if broker.order_min %}<div><dt>Mindestgebühr</dt><dd>{{ broker.order_min|num }} EUR</dd></div>{% endif %}
     {% if broker.order_max is not none %}<div><dt>Deckel</dt><dd>{{ broker.order_max|num }} EUR</dd></div>{% endif %}
     {% if broker.free_above is not none %}<div><dt>Kostenlos ab</dt><dd>{{ broker.free_above|num(0) }} EUR Ordervolumen</dd></div>{% endif %}
-    <div><dt>Sparplan</dt><dd>{{ broker.savings_plan_fixed|num }} EUR je Ausfuehrung</dd></div>
+    <div><dt>Sparplan</dt><dd>{{ broker.savings_plan_fixed|num }} EUR je Ausführung</dd></div>
     <div><dt>Monatliches Abo</dt><dd>{% if broker.subscription_eur %}{{ broker.subscription_eur|num }} EUR{% else %}keins{% endif %}</dd></div>
   </dl>
-  <p class="foot-note">Grundlage: {{ broker.fee_basis }}. Vor einer Veroeffentlichung gegen das Preis- und Leistungsverzeichnis pruefen.</p>
+  <p class="foot-note">Grundlage: {{ broker.fee_basis }}. Vor einer Veröffentlichung gegen das Preis- und Leistungsverzeichnis prüfen.</p>
 </section>
 
 <section class="panel">
@@ -46,9 +46,9 @@
 
 {% if broker.affiliate_url %}
 <section class="panel cta-panel">
-  <p>Depot bei {{ broker.name }} eroeffnen:</p>
+  <p>Depot bei {{ broker.name }} eröffnen:</p>
   <a class="cta" href="{{ broker.affiliate_url }}" rel="nofollow sponsored noopener" target="_blank">Zum Anbieter</a>
-  <p class="foot-note">Werbelink. Bei Abschluss kann eine Verguetung an den Betreiber fliessen, siehe Werbehinweis. Kein Einfluss auf die genannten Gebuehren.</p>
+  <p class="foot-note">Werbelink. Bei Abschluss kann eine Vergütung an den Betreiber fließen, siehe Werbehinweis. Kein Einfluss auf die genannten Gebühren.</p>
 </section>
 {% endif %}
 {% endblock %}

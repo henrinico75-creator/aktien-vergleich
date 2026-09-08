@@ -1,20 +1,20 @@
 # Beobachtete ETFs. Startliste mit in Deutschland viel genutzten Fonds.
 #
 # WICHTIG: TER, Replikation, Ertragsverwendung und Fondsdomizil sind
-# handgepflegt und grob nach Stand Anfang 2026. Vor einer Veroeffentlichung
-# jede Zeile gegen KIID bzw. Factsheet des Anbieters pruefen. Kurse und
-# Fondsvolumen holt der Datenlauf ueber den Ticker.
+# handgepflegt und grob nach Stand Anfang 2026. Vor einer Veröffentlichung
+# jede Zeile gegen KIID bzw. Factsheet des Anbieters prüfen. Kurse und
+# Fondsvolumen holt der Datenlauf über den Ticker.
 #
 # Felder:
 #   slug            URL-Segment /etf/<slug>/, eindeutig
 #   name            Anzeigename
 #   ticker          Yahoo-Finance-Symbol (meist Xetra, Suffix .DE)
 #   wkn / isin      Kennungen
-#   currency        Handelswaehrung der genannten Notiz
+#   currency        Handelswährung der genannten Notiz
 #   ter             Gesamtkostenquote in Prozent pro Jahr
 #   index           abgebildeter Index
 #   replication     physisch voll | physisch optimiert | Sampling | synthetisch
-#   distribution    thesaurierend | ausschuettend
+#   distribution    thesaurierend | ausschüttend
 #   domicile        Fondsdomizil
 #   note            kurze Einordnung
 
@@ -30,7 +30,7 @@ etfs:
     replication: "physisch optimiert"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "Standardbaustein fuer Industrielaender, rund 1.400 Titel."
+    note: "Standardbaustein für Industrieländer, rund 1.400 Titel."
 
   - slug: msci-world-xtrackers
     name: "Xtrackers MSCI World UCITS ETF 1C"
@@ -43,7 +43,7 @@ etfs:
     replication: "physisch voll"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "Alternative zum iShares-Pendant, minimal guenstiger."
+    note: "Alternative zum iShares-Pendant, minimal günstiger."
 
   - slug: ftse-all-world-vanguard-acc
     name: "Vanguard FTSE All-World UCITS ETF (Acc)"
@@ -56,7 +56,7 @@ etfs:
     replication: "physisch optimiert"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "Industrie- und Schwellenlaender in einem Fonds, rund 3.700 Titel."
+    note: "Industrie- und Schwellenländer in einem Fonds, rund 3.700 Titel."
 
   - slug: ftse-all-world-vanguard-dist
     name: "Vanguard FTSE All-World UCITS ETF (Dist)"
@@ -67,9 +67,9 @@ etfs:
     ter: 0.22
     index: "FTSE All-World"
     replication: "physisch optimiert"
-    distribution: "ausschuettend"
+    distribution: "ausschüttend"
     domicile: "Irland"
-    note: "Ausschuettende Variante, quartalsweise Zahlung."
+    note: "Ausschüttende Variante, quartalsweise Zahlung."
 
   - slug: sp500-ishares
     name: "iShares Core S&P 500 UCITS ETF (Acc)"
@@ -82,7 +82,7 @@ etfs:
     replication: "physisch voll"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "500 groesste US-Unternehmen, sehr guenstig."
+    note: "500 größte US-Unternehmen, sehr günstig."
 
   - slug: sp500-vanguard-dist
     name: "Vanguard S&P 500 UCITS ETF (Dist)"
@@ -93,9 +93,9 @@ etfs:
     ter: 0.07
     index: "S&P 500"
     replication: "physisch voll"
-    distribution: "ausschuettend"
+    distribution: "ausschüttend"
     domicile: "Irland"
-    note: "Ausschuettende S&P-500-Variante."
+    note: "Ausschüttende S&P-500-Variante."
 
   - slug: em-imi-ishares
     name: "iShares Core MSCI EM IMI UCITS ETF (Acc)"
@@ -108,7 +108,7 @@ etfs:
     replication: "physisch optimiert"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "Schwellenlaender inklusive Small Caps, oft als Beimischung zu World."
+    note: "Schwellenländer inklusive Small Caps, oft als Beimischung zu World."
 
   - slug: nasdaq100-ishares
     name: "iShares Nasdaq 100 UCITS ETF (Acc)"
@@ -121,7 +121,7 @@ etfs:
     replication: "physisch voll"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "100 groesste Nasdaq-Werte, technologielastig, hoehere Schwankung."
+    note: "100 größte Nasdaq-Werte, technologielastig, höhere Schwankung."
 
   - slug: nasdaq100-invesco-eqqq
     name: "Invesco EQQQ Nasdaq-100 UCITS ETF"
@@ -132,9 +132,9 @@ etfs:
     ter: 0.30
     index: "Nasdaq 100"
     replication: "physisch voll"
-    distribution: "ausschuettend"
+    distribution: "ausschüttend"
     domicile: "Irland"
-    note: "Aeltester Nasdaq-100-ETF in Europa, ausschuettend."
+    note: "Ältester Nasdaq-100-ETF in Europa, ausschüttend."
 
   - slug: dax-ishares
     name: "iShares Core DAX UCITS ETF (DE)"
@@ -147,7 +147,7 @@ etfs:
     replication: "physisch voll"
     distribution: "thesaurierend"
     domicile: "Deutschland"
-    note: "40 groesste deutsche Werte, thesaurierend."
+    note: "40 größte deutsche Werte, thesaurierend."
 
   - slug: stoxx-europe-600-ishares
     name: "iShares STOXX Europe 600 UCITS ETF (DE)"
@@ -158,9 +158,9 @@ etfs:
     ter: 0.20
     index: "STOXX Europe 600"
     replication: "physisch voll"
-    distribution: "ausschuettend"
+    distribution: "ausschüttend"
     domicile: "Deutschland"
-    note: "Breiter Europa-Index ueber 17 Laender."
+    note: "Breiter Europa-Index über 17 Länder."
 
   - slug: acwi-imi-spdr
     name: "SPDR MSCI ACWI IMI UCITS ETF (Acc)"
@@ -173,7 +173,7 @@ etfs:
     replication: "Sampling"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "Welt inklusive Small Caps, rund 3.500 Titel, guenstiger als All-World."
+    note: "Welt inklusive Small Caps, rund 3.500 Titel, günstiger als All-World."
 
   - slug: world-small-cap-ishares
     name: "iShares MSCI World Small Cap UCITS ETF (Acc)"
@@ -186,7 +186,7 @@ etfs:
     replication: "physisch optimiert"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "Kleinere Industrielaender-Werte, als Ergaenzung zu World."
+    note: "Kleinere Industrieländer-Werte, als Ergänzung zu World."
 
   - slug: world-it-xtrackers
     name: "Xtrackers MSCI World Information Technology UCITS ETF 1C"
@@ -210,7 +210,7 @@ etfs:
     ter: 0.65
     index: "S&P Global Clean Energy"
     replication: "physisch voll"
-    distribution: "ausschuettend"
+    distribution: "ausschüttend"
     domicile: "Irland"
     note: "Themen-ETF erneuerbare Energie, hohe TER, hohe Schwankung."
 
@@ -225,7 +225,7 @@ etfs:
     replication: "physisch voll"
     distribution: "thesaurierend"
     domicile: "Irland"
-    note: "Sehr guenstiger Welt-ETF inklusive Schwellenlaender."
+    note: "Sehr günstiger Welt-ETF inklusive Schwellenländer."
 
   - slug: global-aggregate-bond-ishares
     name: "iShares Core Global Aggregate Bond UCITS ETF EUR Hedged (Acc)"
