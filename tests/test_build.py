@@ -11,7 +11,7 @@ from src.build import (
     fmt_pct,
     load_config,
 )
-from src.fetch import _news_date
+from src.fetch import _name_keywords, _news_date
 
 
 def mk(**kw) -> Broker:
@@ -90,3 +90,15 @@ def test_news_datum_kuerzt_iso_string():
 def test_news_datum_ohne_wert():
     assert _news_date(None) is None
     assert _news_date("") is None
+
+
+# ---------------------------------------------------------------- Namensfilter
+
+def test_name_keywords_wirft_rechtsformen_und_kurze_woerter_raus():
+    assert _name_keywords("Mercedes-Benz Group") == ["mercedes", "benz"]
+    assert _name_keywords("Johnson & Johnson") == ["johnson", "johnson"]
+    assert _name_keywords("Volkswagen Vorzuege") == ["volkswagen"]
+
+
+def test_name_keywords_faellt_auf_ganzen_namen_zurueck():
+    assert _name_keywords("SAP") == ["sap"]

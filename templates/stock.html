@@ -112,7 +112,7 @@
       <thead><tr><th>Datum</th><th class="num">Betrag je Aktie</th></tr></thead>
       <tbody>
         {% for d in data.dividends|reverse %}
-        <tr><td class="mono">{{ d.date }}</td><td class="num">{{ d.amount|num(4) }} {{ cur }}</td></tr>
+        <tr><td class="mono">{{ d.date }}</td><td class="num">{{ d.amount|num(2) if d.amount >= 1 else d.amount|num(4) }} {{ cur }}</td></tr>
         {% endfor %}
       </tbody>
     </table>

@@ -95,11 +95,25 @@ def fetch_from_stooq(ticker: str) -> dict:
     return {"price": float(close), "price_date": row.get("Date"), "source": "stooq"}
 
 
-def fetch_from_yfinance(ticker: str) -> dict:
+_NAME_STOPWORDS = {
+    "group", "holding", "holdings", "vorzuege", "vz", "ag", "se", "nv", "plc",
+    "inc", "co", "corp", "the", "und", "and",
+}
+
+
+def _name_keywords(name: str) -> list[str]:
+    """Kernbegriffe aus dem Firmennamen fuer den Relevanzfilter der Meldungen."""
+    words = name.lower().replace("&", " ").replace("-", " ").replace("(", " ").replace(")", " ").split()
+    kw = [w for w in words if len(w) >= 3 and w not in _NAME_STOPWORDS]
+    return kw or [name.lower()]
+
+
+def fetch_from_yfinance(ticker: str, name: str = "") -> dict:
     import yfinance as yf
 
     t = yf.Ticker(ticker)
     out: dict = {"source": "yfinance"}
+    keywords = _name_keywords(name) if name else []
 
     fi = _safe(lambda: t.fast_info)
     if fi is not None:
@@ -136,14 +150,21 @@ def fetch_from_yfinance(ticker: str) -> dict:
         print(f"  dividends nicht verfuegbar ({ticker}): {exc}", file=sys.stderr)
 
     # Meldungen: nur Titel, Quelle, Link, Datum. Kein Fliesstext (Urheberrecht).
+    # Yahoo liefert zu einem Ticker viel Randrauschen (Makro, andere Firmen).
+    # Daher nur Meldungen behalten, deren Titel einen Kernbegriff des
+    # Firmennamens enthaelt. Ohne Treffer bleibt die Meldungsliste leer.
     try:
         raw_news = _safe(lambda: t.news) or []
         items = []
-        for entry in raw_news[:6]:
+        seen_titles: set[str] = set()
+        for entry in raw_news[:30]:
             content = entry.get("content", entry)
             title = content.get("title") or entry.get("title")
-            if not title:
+            if not title or title.lower() in seen_titles:
                 continue
+            if keywords and not any(kw in title.lower() for kw in keywords):
+                continue
+            seen_titles.add(title.lower())
             link = (
                 (content.get("canonicalUrl") or {}).get("url")
                 or (content.get("clickThroughUrl") or {}).get("url")
@@ -158,6 +179,8 @@ def fetch_from_yfinance(ticker: str) -> dict:
             items.append(
                 {"title": title, "url": link, "provider": provider, "published": published}
             )
+            if len(items) >= 5:
+                break
         if items:
             out["news"] = items
     except Exception as exc:  # noqa: BLE001
@@ -180,7 +203,7 @@ def fetch_stock(stock: dict) -> dict:
         "data_status": "ok",
     }
     try:
-        record.update(fetch_from_yfinance(ticker))
+        record.update(fetch_from_yfinance(ticker, stock["name"]))
     except Exception as exc:  # noqa: BLE001
         print(f"{ticker}: yfinance fehlgeschlagen ({exc}), versuche Stooq", file=sys.stderr)
         try:
