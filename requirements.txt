@@ -10,5 +10,9 @@ requests>=2.31
 markdown>=3.6
 python-dotenv>=1.0
 
+# Optional: nur fuer src/summarize.py (eigene Meldungs-Zusammenfassungen).
+# Laeuft nur, wenn ANTHROPIC_API_KEY gesetzt ist.
+anthropic>=0.40
+
 # Tests
 pytest>=8.0

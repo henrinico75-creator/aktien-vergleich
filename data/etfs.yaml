@@ -1,0 +1,241 @@
+# Beobachtete ETFs. Startliste mit in Deutschland viel genutzten Fonds.
+#
+# WICHTIG: TER, Replikation, Ertragsverwendung und Fondsdomizil sind
+# handgepflegt und grob nach Stand Anfang 2026. Vor einer Veroeffentlichung
+# jede Zeile gegen KIID bzw. Factsheet des Anbieters pruefen. Kurse und
+# Fondsvolumen holt der Datenlauf ueber den Ticker.
+#
+# Felder:
+#   slug            URL-Segment /etf/<slug>/, eindeutig
+#   name            Anzeigename
+#   ticker          Yahoo-Finance-Symbol (meist Xetra, Suffix .DE)
+#   wkn / isin      Kennungen
+#   currency        Handelswaehrung der genannten Notiz
+#   ter             Gesamtkostenquote in Prozent pro Jahr
+#   index           abgebildeter Index
+#   replication     physisch voll | physisch optimiert | Sampling | synthetisch
+#   distribution    thesaurierend | ausschuettend
+#   domicile        Fondsdomizil
+#   note            kurze Einordnung
+
+etfs:
+  - slug: msci-world-ishares
+    name: "iShares Core MSCI World UCITS ETF (Acc)"
+    ticker: "EUNL.DE"
+    wkn: "A0RPWH"
+    isin: "IE00B4L5Y983"
+    currency: EUR
+    ter: 0.20
+    index: "MSCI World"
+    replication: "physisch optimiert"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Standardbaustein fuer Industrielaender, rund 1.400 Titel."
+
+  - slug: msci-world-xtrackers
+    name: "Xtrackers MSCI World UCITS ETF 1C"
+    ticker: "XDWD.DE"
+    wkn: "A1XB5U"
+    isin: "IE00BJ0KDQ92"
+    currency: EUR
+    ter: 0.19
+    index: "MSCI World"
+    replication: "physisch voll"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Alternative zum iShares-Pendant, minimal guenstiger."
+
+  - slug: ftse-all-world-vanguard-acc
+    name: "Vanguard FTSE All-World UCITS ETF (Acc)"
+    ticker: "VWCE.DE"
+    wkn: "A2PKXG"
+    isin: "IE00BK5BQT80"
+    currency: EUR
+    ter: 0.22
+    index: "FTSE All-World"
+    replication: "physisch optimiert"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Industrie- und Schwellenlaender in einem Fonds, rund 3.700 Titel."
+
+  - slug: ftse-all-world-vanguard-dist
+    name: "Vanguard FTSE All-World UCITS ETF (Dist)"
+    ticker: "VGWL.DE"
+    wkn: "A1JX52"
+    isin: "IE00B3RBWM25"
+    currency: EUR
+    ter: 0.22
+    index: "FTSE All-World"
+    replication: "physisch optimiert"
+    distribution: "ausschuettend"
+    domicile: "Irland"
+    note: "Ausschuettende Variante, quartalsweise Zahlung."
+
+  - slug: sp500-ishares
+    name: "iShares Core S&P 500 UCITS ETF (Acc)"
+    ticker: "SXR8.DE"
+    wkn: "A0YEDG"
+    isin: "IE00B5BMR087"
+    currency: EUR
+    ter: 0.07
+    index: "S&P 500"
+    replication: "physisch voll"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "500 groesste US-Unternehmen, sehr guenstig."
+
+  - slug: sp500-vanguard-dist
+    name: "Vanguard S&P 500 UCITS ETF (Dist)"
+    ticker: "VUSA.DE"
+    wkn: "A1T8FS"
+    isin: "IE00B3XXRP09"
+    currency: EUR
+    ter: 0.07
+    index: "S&P 500"
+    replication: "physisch voll"
+    distribution: "ausschuettend"
+    domicile: "Irland"
+    note: "Ausschuettende S&P-500-Variante."
+
+  - slug: em-imi-ishares
+    name: "iShares Core MSCI EM IMI UCITS ETF (Acc)"
+    ticker: "IS3N.DE"
+    wkn: "A111X9"
+    isin: "IE00BKM4GZ66"
+    currency: EUR
+    ter: 0.18
+    index: "MSCI Emerging Markets IMI"
+    replication: "physisch optimiert"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Schwellenlaender inklusive Small Caps, oft als Beimischung zu World."
+
+  - slug: nasdaq100-ishares
+    name: "iShares Nasdaq 100 UCITS ETF (Acc)"
+    ticker: "SXRV.DE"
+    wkn: "A0YEDL"
+    isin: "IE00B53SZB19"
+    currency: EUR
+    ter: 0.30
+    index: "Nasdaq 100"
+    replication: "physisch voll"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "100 groesste Nasdaq-Werte, technologielastig, hoehere Schwankung."
+
+  - slug: nasdaq100-invesco-eqqq
+    name: "Invesco EQQQ Nasdaq-100 UCITS ETF"
+    ticker: "EQQQ.DE"
+    wkn: "801498"
+    isin: "IE0032077012"
+    currency: EUR
+    ter: 0.30
+    index: "Nasdaq 100"
+    replication: "physisch voll"
+    distribution: "ausschuettend"
+    domicile: "Irland"
+    note: "Aeltester Nasdaq-100-ETF in Europa, ausschuettend."
+
+  - slug: dax-ishares
+    name: "iShares Core DAX UCITS ETF (DE)"
+    ticker: "EXS1.DE"
+    wkn: "593393"
+    isin: "DE0005933931"
+    currency: EUR
+    ter: 0.16
+    index: "DAX (Performanceindex)"
+    replication: "physisch voll"
+    distribution: "thesaurierend"
+    domicile: "Deutschland"
+    note: "40 groesste deutsche Werte, thesaurierend."
+
+  - slug: stoxx-europe-600-ishares
+    name: "iShares STOXX Europe 600 UCITS ETF (DE)"
+    ticker: "EXSA.DE"
+    wkn: "263530"
+    isin: "DE0002635307"
+    currency: EUR
+    ter: 0.20
+    index: "STOXX Europe 600"
+    replication: "physisch voll"
+    distribution: "ausschuettend"
+    domicile: "Deutschland"
+    note: "Breiter Europa-Index ueber 17 Laender."
+
+  - slug: acwi-imi-spdr
+    name: "SPDR MSCI ACWI IMI UCITS ETF (Acc)"
+    ticker: "SPYI.DE"
+    wkn: "A2QL8U"
+    isin: "IE00B3YLTY66"
+    currency: EUR
+    ter: 0.17
+    index: "MSCI ACWI IMI"
+    replication: "Sampling"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Welt inklusive Small Caps, rund 3.500 Titel, guenstiger als All-World."
+
+  - slug: world-small-cap-ishares
+    name: "iShares MSCI World Small Cap UCITS ETF (Acc)"
+    ticker: "IUSN.DE"
+    wkn: "A2DWBY"
+    isin: "IE00BF4RFH31"
+    currency: EUR
+    ter: 0.35
+    index: "MSCI World Small Cap"
+    replication: "physisch optimiert"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Kleinere Industrielaender-Werte, als Ergaenzung zu World."
+
+  - slug: world-it-xtrackers
+    name: "Xtrackers MSCI World Information Technology UCITS ETF 1C"
+    ticker: "XDWT.DE"
+    wkn: "A113FM"
+    isin: "IE00BM67HT60"
+    currency: EUR
+    ter: 0.25
+    index: "MSCI World Information Technology"
+    replication: "physisch voll"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Sektorwette Technologie, stark konzentriert."
+
+  - slug: clean-energy-ishares
+    name: "iShares Global Clean Energy UCITS ETF"
+    ticker: "IQQH.DE"
+    wkn: "A0MW0M"
+    isin: "IE00B1XNHC34"
+    currency: EUR
+    ter: 0.65
+    index: "S&P Global Clean Energy"
+    replication: "physisch voll"
+    distribution: "ausschuettend"
+    domicile: "Irland"
+    note: "Themen-ETF erneuerbare Energie, hohe TER, hohe Schwankung."
+
+  - slug: prime-all-country-amundi
+    name: "Amundi Prime All Country World UCITS ETF (Acc)"
+    ticker: "WEBN.DE"
+    wkn: "ETF150"
+    isin: "IE0003XJA0J9"
+    currency: EUR
+    ter: 0.07
+    index: "Solactive GBS All Country World"
+    replication: "physisch voll"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Sehr guenstiger Welt-ETF inklusive Schwellenlaender."
+
+  - slug: global-aggregate-bond-ishares
+    name: "iShares Core Global Aggregate Bond UCITS ETF EUR Hedged (Acc)"
+    ticker: "EUNA.DE"
+    wkn: "A1W0PN"
+    isin: "IE00BDBRDM35"
+    currency: EUR
+    ter: 0.10
+    index: "Bloomberg Global Aggregate Bond"
+    replication: "Sampling"
+    distribution: "thesaurierend"
+    domicile: "Irland"
+    note: "Breiter Anleihe-ETF, in Euro abgesichert, als Portfolio-Baustein."

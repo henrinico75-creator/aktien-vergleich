@@ -108,7 +108,49 @@ def _name_keywords(name: str) -> list[str]:
     return kw or [name.lower()]
 
 
-def fetch_from_yfinance(ticker: str, name: str = "") -> dict:
+def _collect_news(ticker_obj, keywords: list[str], limit: int = 5) -> list[dict]:
+    """Bis zu `limit` themenrelevante Meldungen: Titel, Quelle, Link, Datum.
+
+    Behaelt nur Meldungen, deren Titel einen Kernbegriff aus `keywords`
+    enthaelt, und entfernt Doubletten nach Titel.
+    """
+    raw_news = _safe(lambda: ticker_obj.news) or []
+    items: list[dict] = []
+    seen: set[str] = set()
+    for entry in raw_news[:30]:
+        content = entry.get("content", entry)
+        title = content.get("title") or entry.get("title")
+        if not title or title.lower() in seen:
+            continue
+        if keywords and not any(kw in title.lower() for kw in keywords):
+            continue
+        seen.add(title.lower())
+        link = (
+            (content.get("canonicalUrl") or {}).get("url")
+            or (content.get("clickThroughUrl") or {}).get("url")
+            or entry.get("link")
+        )
+        provider = (content.get("provider") or {}).get("displayName") or entry.get("publisher")
+        published = _news_date(content.get("pubDate") or entry.get("providerPublishTime"))
+        # _snippet ist die Kurzbeschreibung der Quelle. Sie wird NICHT direkt
+        # angezeigt (Urheberrecht), sondern dient src/summarize.py als Grundlage
+        # fuer eine eigene Formulierung.
+        snippet = content.get("summary") or content.get("description") or ""
+        items.append(
+            {
+                "title": title,
+                "url": link,
+                "provider": provider,
+                "published": published,
+                "_snippet": snippet[:600],
+            }
+        )
+        if len(items) >= limit:
+            break
+    return items
+
+
+def fetch_from_yfinance(ticker: str, name: str = "", want_news: bool = True) -> dict:
     import yfinance as yf
 
     t = yf.Ticker(ticker)
@@ -153,38 +195,14 @@ def fetch_from_yfinance(ticker: str, name: str = "") -> dict:
     # Yahoo liefert zu einem Ticker viel Randrauschen (Makro, andere Firmen).
     # Daher nur Meldungen behalten, deren Titel einen Kernbegriff des
     # Firmennamens enthaelt. Ohne Treffer bleibt die Meldungsliste leer.
-    try:
-        raw_news = _safe(lambda: t.news) or []
-        items = []
-        seen_titles: set[str] = set()
-        for entry in raw_news[:30]:
-            content = entry.get("content", entry)
-            title = content.get("title") or entry.get("title")
-            if not title or title.lower() in seen_titles:
-                continue
-            if keywords and not any(kw in title.lower() for kw in keywords):
-                continue
-            seen_titles.add(title.lower())
-            link = (
-                (content.get("canonicalUrl") or {}).get("url")
-                or (content.get("clickThroughUrl") or {}).get("url")
-                or entry.get("link")
-            )
-            provider = (content.get("provider") or {}).get("displayName") or entry.get(
-                "publisher"
-            )
-            published = _news_date(
-                content.get("pubDate") or entry.get("providerPublishTime")
-            )
-            items.append(
-                {"title": title, "url": link, "provider": provider, "published": published}
-            )
-            if len(items) >= 5:
-                break
-        if items:
-            out["news"] = items
-    except Exception as exc:  # noqa: BLE001
-        print(f"  news nicht verfuegbar ({ticker}): {exc}", file=sys.stderr)
+    # Fuer ETFs (want_news=False) wird der Block ganz uebersprungen.
+    if want_news:
+        try:
+            out["news"] = _collect_news(t, keywords)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  news nicht verfuegbar ({ticker}): {exc}", file=sys.stderr)
+        if not out.get("news"):
+            out.pop("news", None)
 
     if out.get("price") is None:
         raise RuntimeError("yfinance ohne Kurs")
@@ -215,28 +233,64 @@ def fetch_stock(stock: dict) -> dict:
     return record
 
 
+def fetch_etf(etf: dict) -> dict:
+    """Kurs und Basiskennzahlen fuer einen ETF. Keine Meldungen, kein KGV."""
+    ticker = etf["ticker"]
+    record: dict = {
+        "slug": etf["slug"],
+        "name": etf["name"],
+        "ticker": ticker,
+        "wkn": etf["wkn"],
+        "isin": etf["isin"],
+        "fetched_at": _now_iso(),
+        "data_status": "ok",
+    }
+    try:
+        record.update(fetch_from_yfinance(ticker, etf["name"], want_news=False))
+    except Exception as exc:  # noqa: BLE001
+        print(f"{ticker}: yfinance fehlgeschlagen ({exc}), versuche Stooq", file=sys.stderr)
+        try:
+            record.update(fetch_from_stooq(ticker))
+            record["data_status"] = "nur_kurs_stooq"
+        except Exception as exc2:  # noqa: BLE001
+            print(f"{ticker}: auch Stooq fehlgeschlagen ({exc2})", file=sys.stderr)
+            record["data_status"] = "fehlgeschlagen"
+    return record
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Kurse und Kennzahlen holen")
     parser.add_argument("--only", nargs="*", default=None, help="nur diese Slugs")
+    parser.add_argument(
+        "--kind", choices=["alle", "aktien", "etfs"], default="alle",
+        help="nur Aktien oder nur ETFs holen",
+    )
     args = parser.parse_args(argv)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    stocks = load_stocks()
-    if args.only:
-        wanted = set(args.only)
-        stocks = [s for s in stocks if s["slug"] in wanted]
+    wanted = set(args.only) if args.only else None
+
+    jobs: list[tuple[str, dict, str]] = []
+    if args.kind in ("alle", "aktien"):
+        jobs += [("aktie", s, f"{s['slug']}.json") for s in load_stocks()]
+    if args.kind in ("alle", "etfs"):
+        from src.etfs import load_etfs
+
+        jobs += [("etf", e.__dict__, f"etf-{e.slug}.json") for e in load_etfs()]
+    if wanted is not None:
+        jobs = [j for j in jobs if j[1]["slug"] in wanted]
 
     failed: list[str] = []
-    for stock in stocks:
-        print(f"hole {stock['ticker']} ...", file=sys.stderr)
-        rec = fetch_stock(stock)
-        (OUT_DIR / f"{stock['slug']}.json").write_text(
+    for kind, entry, filename in jobs:
+        print(f"hole {entry['ticker']} ({kind}) ...", file=sys.stderr)
+        rec = fetch_stock(entry) if kind == "aktie" else fetch_etf(entry)
+        (OUT_DIR / filename).write_text(
             json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8"
         )
         if rec["data_status"] == "fehlgeschlagen":
-            failed.append(stock["slug"])
+            failed.append(f"{kind}:{entry['slug']}")
 
-    print(f"fertig: {len(stocks)} Titel, {len(failed)} fehlgeschlagen", file=sys.stderr)
+    print(f"fertig: {len(jobs)} Titel, {len(failed)} fehlgeschlagen", file=sys.stderr)
     if failed:
         print("fehlgeschlagen: " + ", ".join(failed), file=sys.stderr)
     # Kein harter Exit-Fehler: der Build soll auch mit Luecken laufen.

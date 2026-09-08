@@ -68,23 +68,7 @@
   </p>
 </section>
 
-<section class="panel">
-  <div class="panel-head"><h2>Eigenes Ordervolumen rechnen</h2></div>
-  <div class="calc">
-    <label for="calc-vol">Ordervolumen <span id="calc-out" class="mono">1.000 EUR</span></label>
-    <input type="range" id="calc-vol" min="100" max="10000" step="50" value="1000">
-    <div class="ticks"><span>100 EUR</span><span>10.000 EUR</span></div>
-  </div>
-  <div class="table-scroll">
-    <table class="cmp" id="calc-table">
-      <thead>
-        <tr><th>Broker</th><th class="num">Kosten</th><th class="num">Anteil</th><th class="num"><span class="sr-only">Link zum Anbieter</span></th></tr>
-      </thead>
-      <tbody id="calc-rows"></tbody>
-    </table>
-  </div>
-  <p class="foot-note">Rechnet dieselbe Formel wie die Tabelle oben, im Browser. Ohne JavaScript bleiben die festen Volumina oben massgeblich.</p>
-</section>
+{% include "_calculator.html" %}
 
 <section class="panel">
   <div class="panel-head"><h2>Kennzahlen</h2>{% if not has_data %}<span class="badge">ausstehend</span>{% endif %}</div>
@@ -124,84 +108,34 @@
 <section class="panel">
   <div class="panel-head"><h2>Aktuelles und Management-Aussagen</h2></div>
   {% if data.news %}
-  <ul class="news">
+  <div class="statements">
     {% for n in data.news %}
-    <li>
-      <div class="n-meta">
-        {% if n.published %}<span>{{ n.published }}</span><span aria-hidden="true">&middot;</span>{% endif %}
-        <span>{{ n.provider or "Quelle" }}</span>
-      </div>
-      {% if n.url %}
-      <a class="n-title" href="{{ n.url }}" rel="nofollow noopener" target="_blank">{{ n.title }}</a>
-      {% else %}
-      <span class="n-title">{{ n.title }}</span>
-      {% endif %}
-    </li>
+    <article class="statement">
+      <p class="statement-text">{{ n.summary or n.title }}</p>
+      <p class="statement-src">
+        Quelle:
+        {% if n.url %}
+        <a href="{{ n.url }}" rel="nofollow noopener" target="_blank">{{ n.provider or "Bericht" }}{% if n.published %}, {{ n.published }}{% endif %}</a>
+        {% else %}
+        <span>{{ n.provider or "Bericht" }}{% if n.published %}, {{ n.published }}{% endif %}</span>
+        {% endif %}
+      </p>
+    </article>
     {% endfor %}
-  </ul>
-  <p class="foot-note">Nur Schlagzeile und Quellenlink. Zusammenfassungen in eigenen Worten folgen, kein uebernommener Artikeltext.</p>
+  </div>
+  <p class="foot-note">
+    {% if data.news[0].summary %}
+    Zusammenfassungen in eigenen Worten auf Basis der verlinkten Quelle, kein uebernommener Artikeltext.
+    {% else %}
+    Derzeit die Schlagzeile der Quelle. Eigene Kurzzusammenfassungen werden ergaenzt, kein uebernommener Artikeltext.
+    {% endif %}
+  </p>
   {% else %}
-  <p class="muted">Hier erscheinen Schlagzeilen und, sobald redaktionell erfasst, kurze eigene Zusammenfassungen von Quartalsberichten, Analysten-Calls und Ad-hoc-Mitteilungen, jeweils mit Datum und Quellenlink.</p>
+  <p class="muted">Sobald Meldungen zu {{ stock.name }} vorliegen, stehen hier kurze, eigene Zusammenfassungen von Quartalsberichten, Analysten-Calls und Ad-hoc-Mitteilungen, jeweils mit Datum und Quellenlink darunter.</p>
   {% endif %}
 </section>
 
 <section class="disclaimer-box">
   <p><strong>Keine Anlageberatung.</strong> Diese Seite vergleicht Kosten und stellt Fakten zusammen. Sie enthaelt keine Kauf- oder Verkaufsempfehlung und keine Order- oder Zahlungsfunktion.</p>
 </section>
-
-<script>
-(function () {
-  var brokers = {{ brokers_json|safe }};
-  var deEUR = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  var deInt = new Intl.NumberFormat("de-DE");
-  var dePct = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-  function esc(s) {
-    return String(s === null || s === undefined ? "" : s)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-  }
-
-  function orderCost(b, v) {
-    if (b.free_above !== null && b.free_above !== undefined && v >= b.free_above) return 0;
-    var c = b.order_fixed + b.order_pct * v;
-    if (b.order_min) c = Math.max(c, b.order_min);
-    if (b.order_max !== null && b.order_max !== undefined) c = Math.min(c, b.order_max);
-    return Math.round(c * 100) / 100;
-  }
-
-  var vol = document.getElementById("calc-vol");
-  var out = document.getElementById("calc-out");
-  var rows = document.getElementById("calc-rows");
-  if (!vol || !rows) return;
-
-  function render() {
-    var v = +vol.value;
-    out.textContent = deInt.format(v) + " EUR";
-    var list = brokers.map(function (b) { return {b: b, c: orderCost(b, v)}; });
-    var min = Math.min.apply(null, list.map(function (x) { return x.c; }));
-    list.sort(function (a, b) { return a.c - b.c || a.b.name.localeCompare(b.b.name, "de"); });
-    rows.innerHTML = "";
-    list.forEach(function (x) {
-      var tr = document.createElement("tr");
-      var best = Math.abs(x.c - min) < 1e-9;
-      if (best && x.c > 0) tr.className = "best";
-      else if (x.c === 0) tr.className = "zero";
-      var link = x.b.affiliate_url
-        ? '<a class="mini-cta" href="' + esc(x.b.affiliate_url) + '" rel="nofollow sponsored noopener" target="_blank">zum Anbieter</a>'
-        : '';
-      tr.innerHTML =
-        '<td><div class="bname">' + esc(x.b.name) +
-        (best && x.c > 0 ? ' <span class="tag">Guenstigster</span>' : '') +
-        '</div><div class="note">' + esc(x.b.note) + '</div></td>' +
-        '<td class="num">' + deEUR.format(x.c) + ' EUR</td>' +
-        '<td class="num">' + dePct.format(v ? (x.c / v * 100) : 0) + ' %</td>' +
-        '<td class="num">' + link + '</td>';
-      rows.appendChild(tr);
-    });
-  }
-  vol.addEventListener("input", render);
-  render();
-})();
-</script>
 {% endblock %}

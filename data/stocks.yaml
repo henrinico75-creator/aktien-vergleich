@@ -40,3 +40,45 @@ stocks:
   - {slug: johnson-johnson,   name: "Johnson & Johnson",   ticker: "JNJ",     wkn: "853260", isin: "US4781601046", currency: USD, sector: "Pharma"}
   - {slug: mcdonalds,         name: "McDonald's",          ticker: "MCD",     wkn: "856958", isin: "US5801351017", currency: USD, sector: "Konsum"}
   - {slug: berkshire-b,       name: "Berkshire Hathaway B", ticker: "BRK-B",  wkn: "A0YJQ2", isin: "US0846707026", currency: USD, sector: "Beteiligungen"}
+
+  # Weitere deutsche Werte (DAX / MDAX)
+  - {slug: porsche-ag,        name: "Porsche AG",          ticker: "P911.DE", wkn: "PAG911", isin: "DE000PAG9113", currency: EUR, sector: "Automobil"}
+  - {slug: porsche-se,        name: "Porsche SE",          ticker: "PAH3.DE", wkn: "PAH003", isin: "DE000PAH0038", currency: EUR, sector: "Beteiligungen"}
+  - {slug: beiersdorf,        name: "Beiersdorf",          ticker: "BEI.DE",  wkn: "520000", isin: "DE0005200000", currency: EUR, sector: "Konsum"}
+  - {slug: henkel-vz,         name: "Henkel Vorzuege",     ticker: "HEN3.DE", wkn: "604843", isin: "DE0006048432", currency: EUR, sector: "Konsum"}
+  - {slug: fresenius,         name: "Fresenius",           ticker: "FRE.DE",  wkn: "578560", isin: "DE0005785604", currency: EUR, sector: "Gesundheit"}
+  - {slug: eon,               name: "E.ON",                ticker: "EOAN.DE", wkn: "ENAG99", isin: "DE000ENAG999", currency: EUR, sector: "Versorger"}
+  - {slug: rwe,               name: "RWE",                 ticker: "RWE.DE",  wkn: "703712", isin: "DE0007037129", currency: EUR, sector: "Versorger"}
+  - {slug: vonovia,           name: "Vonovia",             ticker: "VNA.DE",  wkn: "A1ML7J", isin: "DE000A1ML7J1", currency: EUR, sector: "Immobilien"}
+  - {slug: daimler-truck,     name: "Daimler Truck",       ticker: "DTG.DE",  wkn: "DTR0CK", isin: "DE000DTR0CK8", currency: EUR, sector: "Automobil"}
+  - {slug: zalando,           name: "Zalando",             ticker: "ZAL.DE",  wkn: "ZAL111", isin: "DE000ZAL1111", currency: EUR, sector: "Handel"}
+  - {slug: commerzbank,       name: "Commerzbank",         ticker: "CBK.DE",  wkn: "CBK100", isin: "DE000CBK1001", currency: EUR, sector: "Bank"}
+  - {slug: heidelberg-materials, name: "Heidelberg Materials", ticker: "HEI.DE", wkn: "604700", isin: "DE0006047004", currency: EUR, sector: "Baustoffe"}
+  - {slug: mtu,               name: "MTU Aero Engines",    ticker: "MTX.DE",  wkn: "A0D9PT", isin: "DE000A0D9PT0", currency: EUR, sector: "Industrie"}
+  - {slug: hannover-rueck,    name: "Hannover Rueck",      ticker: "HNR1.DE", wkn: "840221", isin: "DE0008402215", currency: EUR, sector: "Rueckversicherung"}
+  - {slug: deutsche-boerse,   name: "Deutsche Boerse",     ticker: "DB1.DE",  wkn: "581005", isin: "DE0005810055", currency: EUR, sector: "Finanzen"}
+  - {slug: siemens-energy,    name: "Siemens Energy",      ticker: "ENR.DE",  wkn: "ENER6Y", isin: "DE000ENER6Y0", currency: EUR, sector: "Energietechnik"}
+  - {slug: siemens-healthineers, name: "Siemens Healthineers", ticker: "SHL.DE", wkn: "SHL100", isin: "DE000SHL1006", currency: EUR, sector: "Medizintechnik"}
+
+  # Europaeische Standardwerte, in Deutschland viel gehandelt
+  - {slug: asml,              name: "ASML",                ticker: "ASML.AS", wkn: "A1J4U4", isin: "NL0010273215", currency: EUR, sector: "Halbleiter"}
+  - {slug: lvmh,              name: "LVMH",                ticker: "MC.PA",   wkn: "853292", isin: "FR0000121014", currency: EUR, sector: "Luxus"}
+  - {slug: totalenergies,     name: "TotalEnergies",       ticker: "TTE.PA",  wkn: "850727", isin: "FR0000120271", currency: EUR, sector: "Energie"}
+  - {slug: nestle,            name: "Nestle",              ticker: "NESN.SW", wkn: "A0Q4DC", isin: "CH0038863350", currency: CHF, sector: "Konsum"}
+  - {slug: novartis,          name: "Novartis",            ticker: "NOVN.SW", wkn: "904278", isin: "CH0012005267", currency: CHF, sector: "Pharma"}
+  - {slug: novo-nordisk,      name: "Novo Nordisk",        ticker: "NVO",     wkn: "A1XA8R", isin: "US6701002056", currency: USD, sector: "Pharma"}
+  - {slug: shell,             name: "Shell",               ticker: "SHEL",    wkn: "A3C99G", isin: "GB00BP6MXD84", currency: USD, sector: "Energie"}
+
+  # Weitere US-Werte mit hoher Nachfrage
+  - {slug: alphabet-c,        name: "Alphabet (C)",        ticker: "GOOG",    wkn: "A14Y6H", isin: "US02079K1079", currency: USD, sector: "Technologie"}
+  - {slug: broadcom,          name: "Broadcom",            ticker: "AVGO",    wkn: "A2JG9Z", isin: "US11135F1012", currency: USD, sector: "Halbleiter"}
+  - {slug: amd,               name: "AMD",                 ticker: "AMD",     wkn: "863186", isin: "US0079031078", currency: USD, sector: "Halbleiter"}
+  - {slug: palantir,          name: "Palantir",            ticker: "PLTR",    wkn: "A2QA4J", isin: "US69608A1088", currency: USD, sector: "Software"}
+  - {slug: eli-lilly,         name: "Eli Lilly",           ticker: "LLY",     wkn: "858560", isin: "US5324571083", currency: USD, sector: "Pharma"}
+  - {slug: visa,              name: "Visa",                ticker: "V",       wkn: "A0NC7B", isin: "US92826C8394", currency: USD, sector: "Finanzen"}
+  - {slug: mastercard,        name: "Mastercard",          ticker: "MA",      wkn: "A0F602", isin: "US57636Q1040", currency: USD, sector: "Finanzen"}
+  - {slug: jpmorgan,          name: "JPMorgan Chase",      ticker: "JPM",     wkn: "850628", isin: "US46625H1005", currency: USD, sector: "Bank"}
+  - {slug: walmart,           name: "Walmart",             ticker: "WMT",     wkn: "860853", isin: "US9311421039", currency: USD, sector: "Handel"}
+  - {slug: exxon,             name: "ExxonMobil",          ticker: "XOM",     wkn: "852549", isin: "US30231G1022", currency: USD, sector: "Energie"}
+  - {slug: netflix,           name: "Netflix",             ticker: "NFLX",    wkn: "552484", isin: "US64110L1061", currency: USD, sector: "Medien"}
+  - {slug: procter-gamble,    name: "Procter & Gamble",    ticker: "PG",      wkn: "852062", isin: "US7427181091", currency: USD, sector: "Konsum"}

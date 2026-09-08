@@ -163,12 +163,14 @@ dl.kv > div:last-child { border-bottom: 0; }
 dl.kv dt { color: var(--muted); font-size: .9rem; }
 dl.kv dd { margin: 0; font-weight: 600; font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; text-align: right; }
 
-/* News */
-ul.news { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-ul.news li { padding-bottom: 14px; border-bottom: 1px solid var(--line); }
-ul.news li:last-child { padding-bottom: 0; border-bottom: 0; }
-.n-meta { font-size: .76rem; color: var(--muted); margin-bottom: 3px; display: flex; gap: 8px; flex-wrap: wrap; }
-.n-title { font-size: .95rem; font-weight: 500; }
+/* Aussagen und Meldungen */
+.statements { display: flex; flex-direction: column; gap: 18px; }
+.statement { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.statement:last-child { padding-bottom: 0; border-bottom: 0; }
+.statement-text { margin: 0 0 6px; font-size: .98rem; line-height: 1.55; max-width: 68ch; }
+.statement-src { margin: 0; font-size: .8rem; color: var(--muted); }
+.statement-src a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.statement-src a:hover { color: var(--ink); }
 
 /* CTA und Hinweise */
 .cta-panel { text-align: left; }

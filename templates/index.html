@@ -7,9 +7,10 @@
 <section class="hero">
   <h1>{{ cfg.tagline }}</h1>
   <p class="lede">
-    Fuer jede Aktie eine Seite mit dem Kostenvergleich ueber {{ overview|length }} Titel
-    und {{ brokers|length }} Broker. Dazu die wichtigsten Kennzahlen,
-    Dividendendaten und aktuelle Aussagen des Managements.
+    Fuer jede Aktie und jeden ETF eine Seite mit dem Kostenvergleich ueber
+    {{ overview|length }} Aktien, {{ etf_overview|length }} ETFs und
+    {{ brokers|length }} Broker. Dazu Kennzahlen, Dividenden und aktuelle
+    Aussagen des Managements.
   </p>
   <p class="hero-note">
     Beispiel: Einmalkauf ueber 1.000 EUR ist derzeit bei
@@ -36,6 +37,35 @@
           <td class="num">
             {% if row.has_data and row.data.price is not none %}
               {{ row.data.price|num }} {{ row.data.currency or row.stock.currency }}
+            {% else %}
+              <span class="muted">wird geladen</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>Alle ETFs</h2></div>
+  <div class="table-scroll">
+    <table class="listing">
+      <thead>
+        <tr><th>ETF</th><th>Index</th><th class="num">TER</th><th class="num">Kurs</th></tr>
+      </thead>
+      <tbody>
+        {% for row in etf_overview %}
+        <tr>
+          <td>
+            <a class="listing-link" href="{{ cfg.path_prefix }}/etf/{{ row.etf.slug }}/">{{ row.etf.name }}</a>
+          </td>
+          <td>{{ row.etf.index }}</td>
+          <td class="num">{{ row.etf.ter|num }} %</td>
+          <td class="num">
+            {% if row.has_data and row.data.price is not none %}
+              {{ row.data.price|num }} {{ row.data.currency or row.etf.currency }}
             {% else %}
               <span class="muted">wird geladen</span>
             {% endif %}

@@ -27,6 +27,7 @@ except ImportError:  # markdown ist optional, Fallback weiter unten
     _md = None
 
 from src.brokers import Broker, load_brokers, order_cost, rank_brokers
+from src.etfs import Etf, load_etfs
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
@@ -52,8 +53,8 @@ def load_stocks() -> list[dict]:
     return yaml.safe_load((DATA_DIR / "stocks.yaml").read_text(encoding="utf-8"))["stocks"]
 
 
-def load_generated(slug: str) -> dict | None:
-    p = GEN_DIR / f"{slug}.json"
+def load_generated(slug: str, prefix: str = "") -> dict | None:
+    p = GEN_DIR / f"{prefix}{slug}.json"
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
 
 
@@ -122,10 +123,13 @@ def _cost_matrix(brokers: list[Broker], sizes: list[int], kind: str = "einmalkau
     return [{"size": s, "rows": rank_brokers(brokers, s, kind)} for s in sizes]
 
 
-def _write_sitemap(cfg: dict, stocks: list[dict], brokers: list[Broker]) -> None:
+def _write_sitemap(
+    cfg: dict, stocks: list[dict], etfs: list[Etf], brokers: list[Broker]
+) -> None:
     base = cfg["base_url"]
     urls = [f"{base}/"]
     urls += [f"{base}/aktie/{s['slug']}/" for s in stocks]
+    urls += [f"{base}/etf/{e.slug}/" for e in etfs]
     urls += [f"{base}/broker/{b.id}/" for b in brokers]
     urls += [f"{base}/{p}/" for p in ("impressum", "datenschutz", "werbehinweis")]
     body = "\n".join(f"  <url><loc>{u}</loc></url>" for u in urls)
@@ -141,6 +145,7 @@ def build() -> None:
     cfg = load_config()
     brokers = load_brokers()
     stocks = load_stocks()
+    etfs = load_etfs()
     sizes = cfg.get("default_order_sizes", [250, 1000, 5000])
     env = _env()
     built_at = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
@@ -177,12 +182,35 @@ def build() -> None:
             ),
         )
 
+    etf_tpl = env.get_template("etf.html")
+    etf_overview = []
+    for e in etfs:
+        gen = load_generated(e.slug, prefix="etf-") or {}
+        gen["dividend_yield_pct"] = _div_yield_pct(gen.get("dividend_yield"))
+        has_data = bool(gen) and gen.get("data_status") not in (None, "fehlgeschlagen")
+        etf_overview.append({"etf": e, "data": gen, "has_data": has_data})
+        _write(
+            DIST / "etf" / e.slug / "index.html",
+            etf_tpl.render(
+                cfg=cfg,
+                built_at=built_at,
+                etf=e,
+                data=gen,
+                has_data=has_data,
+                brokers=brokers,
+                brokers_json=_brokers_json(brokers),
+                matrix=matrix,
+                sizes=sizes,
+            ),
+        )
+
     _write(
         DIST / "index.html",
         env.get_template("index.html").render(
             cfg=cfg,
             built_at=built_at,
             overview=overview,
+            etf_overview=etf_overview,
             brokers=brokers,
             cheapest=cheapest_1000,
         ),
@@ -219,13 +247,14 @@ def build() -> None:
             ),
         )
 
-    _write_sitemap(cfg, stocks, brokers)
+    _write_sitemap(cfg, stocks, etfs, brokers)
     _write(
         DIST / "robots.txt",
         f"User-agent: *\nAllow: /\nSitemap: {cfg['base_url']}/sitemap.xml\n",
     )
     print(
-        f"gebaut: {len(stocks)} Aktienseiten, {len(brokers)} Brokerseiten -> {DIST}"
+        f"gebaut: {len(stocks)} Aktienseiten, {len(etfs)} ETF-Seiten, "
+        f"{len(brokers)} Brokerseiten -> {DIST}"
     )
 
 
