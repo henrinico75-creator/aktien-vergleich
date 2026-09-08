@@ -1,0 +1,7 @@
+# Zeilenenden im Repo einheitlich auf LF, damit Windows-Checkouts nicht bei
+# jeder Datei "LF will be replaced by CRLF" melden.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
