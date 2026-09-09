@@ -1,30 +1,18 @@
 {# Interaktiver Broker-Kostenrechner. Erwartet brokers_json im Kontext. #}
-<section class="panel" id="rechner">
-  <div class="panel-head"><h2>Eigenes Ordervolumen rechnen</h2></div>
-  <div class="calc">
-    <label for="calc-vol">Ordervolumen <span id="calc-out" class="mono">1.000 EUR</span></label>
-    <input type="range" id="calc-vol" min="100" max="10000" step="50" value="1000">
-    <div class="ticks"><span>100 EUR</span><span>10.000 EUR</span></div>
-  </div>
-  <div class="table-scroll">
-    <table class="cmp" id="calc-table">
-      <thead>
-        <tr>
-          <th>Broker</th>
-          <th class="num">Kosten</th>
-          <th class="num">Anteil</th>
-          <th class="costbar-cell"><span class="sr-only">Kostenbalken</span></th>
-          <th class="num"><span class="sr-only">Link zum Anbieter</span></th>
-        </tr>
-      </thead>
-      <tbody id="calc-rows"></tbody>
-    </table>
-  </div>
-  <p class="foot-note">
-    Rechnet dieselbe Formel wie die Tabelle oben, im Browser. Der Balken zeigt
-    die Orderkosten im Verhältnis zum teuersten hier gelisteten Broker. Ohne
-    JavaScript bleiben die festen Volumina oben maßgeblich.
+<section class="block" id="rechner">
+  <h2>Eigenes Ordervolumen rechnen</h2>
+  <p class="block-lead">
+    Rechnet dieselbe Formel wie oben, im Browser. Ohne JavaScript bleiben die
+    festen Ordervolumina maßgeblich.
   </p>
+  <div class="panel">
+    <div class="calc">
+      <label for="calc-vol">Ordervolumen <span id="calc-out" class="mono">1.000 EUR</span></label>
+      <input type="range" id="calc-vol" min="100" max="10000" step="50" value="1000">
+      <div class="ticks"><span>100 EUR</span><span>10.000 EUR</span></div>
+    </div>
+    <div class="chart" id="calc-chart"></div>
+  </div>
 </section>
 
 <script>
@@ -33,54 +21,44 @@
   window.__brokers = brokers;
   var deEUR = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2});
   var deInt = new Intl.NumberFormat("de-DE");
-  var dePct = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
   function esc(s) {
-    return String(s === null || s === undefined ? "" : s)
+    return String(s == null ? "" : s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
-
   function orderCost(b, v) {
-    if (b.free_above !== null && b.free_above !== undefined && v >= b.free_above) return 0;
+    if (b.free_above != null && v >= b.free_above) return 0;
     var c = b.order_fixed + b.order_pct * v;
     if (b.order_min) c = Math.max(c, b.order_min);
-    if (b.order_max !== null && b.order_max !== undefined) c = Math.min(c, b.order_max);
+    if (b.order_max != null) c = Math.min(c, b.order_max);
     return Math.round(c * 100) / 100;
   }
 
   var vol = document.getElementById("calc-vol");
   var out = document.getElementById("calc-out");
-  var rows = document.getElementById("calc-rows");
-  if (!vol || !rows) return;
+  var chart = document.getElementById("calc-chart");
+  if (!vol || !chart) return;
 
   function render() {
     var v = +vol.value;
     out.textContent = deInt.format(v) + " EUR";
-    var list = brokers.map(function (b) { return {b: b, c: orderCost(b, v)}; });
-    var min = Math.min.apply(null, list.map(function (x) { return x.c; }));
+    var list = brokers.map(function (b) { return {b: b, c: orderCost(b, v)}; })
+      .sort(function (a, b) { return a.c - b.c || a.b.name.localeCompare(b.b.name, "de"); });
+    var min = list[0].c;
     var max = Math.max.apply(null, list.map(function (x) { return x.c; }));
-    list.sort(function (a, b) { return a.c - b.c || a.b.name.localeCompare(b.b.name, "de"); });
-    rows.innerHTML = "";
-    list.forEach(function (x) {
-      var tr = document.createElement("tr");
-      var best = Math.abs(x.c - min) < 1e-9;
-      if (best && x.c > 0) tr.className = "best";
-      else if (x.c === 0) tr.className = "zero";
-      var pct = max > 0 ? (x.c / max * 100) : 0;
+    chart.innerHTML = list.map(function (x, i) {
+      var isMin = Math.abs(x.c - min) < 1e-9;
+      var w = x.c === 0 ? 3 : (max > 0 ? (x.c / max * 100) : 0);
       var link = x.b.affiliate_url
-        ? '<a class="mini-cta" href="' + esc(x.b.affiliate_url) + '" rel="nofollow sponsored noopener" target="_blank">zum Anbieter</a>'
-        : '';
-      tr.innerHTML =
-        '<td><div class="bname">' + esc(x.b.name) +
-        (best && x.c > 0 ? ' <span class="tag">Günstigster</span>' : '') +
-        '</div><div class="note">' + esc(x.b.note) + '</div></td>' +
-        '<td class="num">' + deEUR.format(x.c) + ' EUR</td>' +
-        '<td class="num">' + dePct.format(v ? (x.c / v * 100) : 0) + ' %</td>' +
-        '<td class="costbar-cell"><span class="costbar"><span class="costbar-fill" style="width:' + pct.toFixed(1) + '%"></span></span></td>' +
-        '<td class="num">' + link + '</td>';
-      rows.appendChild(tr);
-    });
+        ? ' <a class="mini-cta" href="' + esc(x.b.affiliate_url) + '" rel="nofollow sponsored noopener" target="_blank">zum Anbieter</a>' : '';
+      var tag = i === 0 ? '<span class="' + (x.c > 0 ? 'chart-tag' : 'chart-tag') + '">' + (x.c > 0 ? 'günstigster' : '0 EUR') + '</span>' : '';
+      return '<div class="chart-row' + (isMin ? ' is-best' : '') + '">' +
+        '<span class="chart-name">' + esc(x.b.name) + tag + '</span>' +
+        '<span class="chart-track"><span class="chart-fill" style="width:' + w.toFixed(1) + '%"></span></span>' +
+        '<span class="chart-cost">' + deEUR.format(x.c) + ' EUR' + link + '</span>' +
+      '</div>';
+    }).join("");
   }
   vol.addEventListener("input", render);
   render();

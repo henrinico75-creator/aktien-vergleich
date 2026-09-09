@@ -123,6 +123,36 @@ def _cost_matrix(brokers: list[Broker], sizes: list[int], kind: str = "einmalkau
     return [{"size": s, "rows": rank_brokers(brokers, s, kind)} for s in sizes]
 
 
+def _js_json(payload) -> str:
+    """JSON fuer die direkte Einbettung in einen <script>-Block.
+    < > & als Unicode-Escapes, damit Textinhalte den Block nicht beenden.
+    """
+    text = json.dumps(payload, ensure_ascii=False)
+    return text.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+
+
+def _search_index_json(cfg: dict, stocks: list[dict], etfs: list[Etf]) -> str:
+    """Kompakter Suchindex fuer das Kopf-Suchfeld auf jeder Seite.
+    q ist der klein geschriebene Suchtext (Name, WKN, ISIN, Branche/Index).
+    """
+    p = cfg["path_prefix"]
+    items = [
+        {
+            "n": s["name"], "k": "Aktie", "u": f"{p}/aktie/{s['slug']}/",
+            "q": f"{s['name']} {s['wkn']} {s['isin']} {s['sector']}".lower(),
+        }
+        for s in stocks
+    ]
+    items += [
+        {
+            "n": e.name, "k": "ETF", "u": f"{p}/etf/{e.slug}/",
+            "q": f"{e.name} {e.wkn} {e.isin} {e.index}".lower(),
+        }
+        for e in etfs
+    ]
+    return _js_json(items)
+
+
 def _write_sitemap(
     cfg: dict, stocks: list[dict], etfs: list[Etf], brokers: list[Broker]
 ) -> None:
@@ -148,6 +178,7 @@ def build() -> None:
     etfs = load_etfs()
     sizes = cfg.get("default_order_sizes", [250, 1000, 5000])
     env = _env()
+    env.globals["search_index_json"] = _search_index_json(cfg, stocks, etfs)
     built_at = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
 
     if DIST.exists():
@@ -158,8 +189,7 @@ def build() -> None:
     _write(DIST / ".nojekyll", "")
 
     matrix = _cost_matrix(brokers, sizes)
-    ranked_1000 = rank_brokers(brokers, 1000)
-    cheapest_1000 = ranked_1000[0]
+    leaderboard = [{"size": s, "rows": rank_brokers(brokers, s)[:3]} for s in sizes]
 
     stock_tpl = env.get_template("stock.html")
     overview = []
@@ -213,9 +243,7 @@ def build() -> None:
             overview=overview,
             etf_overview=etf_overview,
             brokers=brokers,
-            cheapest=cheapest_1000,
-            cheapest_rows=ranked_1000[:4],
-            priciest_row=ranked_1000[-1],
+            leaderboard=leaderboard,
         ),
     )
 

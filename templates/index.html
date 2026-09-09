@@ -1,105 +1,46 @@
 {% extends "base.html" %}
-{% block title %}{{ cfg.site_name }}: Aktien günstig kaufen im Broker-Vergleich{% endblock %}
-{% block description %}Pro Aktie: bei welchem Broker Kauf und Sparplan am wenigsten kosten, plus Kennzahlen und aktuelle Meldungen.{% endblock %}
+{% block title %}{{ cfg.site_name }}: Aktien und ETFs günstig kaufen im Broker-Vergleich{% endblock %}
+{% block description %}Pro Aktie und ETF: bei welchem Broker Kauf und Sparplan am wenigsten kosten, plus Kennzahlen und aktuelle Meldungen.{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/">{% endblock %}
 
 {% block content %}
-<section class="landing-hero">
-  <div>
-    <h1>{{ cfg.tagline }}</h1>
-    <p class="lede">
-      Für jede Aktie und jeden ETF: Orderkosten je Broker, dazu Kennzahlen,
-      Dividenden und Management-Aussagen mit Quelle.
-    </p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#aktien" data-jump-search>Aktie oder ETF suchen</a>
-      <a class="btn btn-ghost" href="#so-gehts">So funktioniert es</a>
-    </div>
-  </div>
-  <div class="hero-quote" aria-label="Kostenrangfolge für einen Einmalkauf über 1.000 Euro">
-    <p class="hq-cap">Einmalkauf 1.000 EUR, günstigste zuerst</p>
-    <table>
-      <tbody>
-        {% for q in cheapest_rows %}
-        <tr class="{{ 'hq-best' if loop.first }}">
-          <td class="hq-name">{{ q.broker.name }}</td>
-          <td class="hq-cost">{{ q.cost|eur }}</td>
-        </tr>
-        {% endfor %}
-        <tr class="hq-gap"><td>…</td><td></td></tr>
-        <tr>
-          <td class="hq-name">{{ priciest_row.broker.name }}</td>
-          <td class="hq-cost">{{ priciest_row.cost|eur }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="hq-foot">Broker-Gebühren, Stand siehe Fußzeile. Noch nicht final geprüft.</p>
-  </div>
+<section class="masthead">
+  <h1>{{ cfg.tagline }}</h1>
+  <p>Titel eingeben, Kosten je Broker ablesen. Dazu Kennzahlen, Dividenden und Management-Aussagen mit Quelle.</p>
 </section>
 
-<div class="section-head" id="so-gehts">
-  <h2>So kommt man zum Vergleich</h2>
-  <p>Kein Konto, keine Anmeldung. Titel wählen, Kosten ablesen, beim günstigsten Anbieter kaufen.</p>
-</div>
-<div class="flow">
-  <div class="flow-step">
-    <span class="n">1</span>
-    <h3>Titel wählen</h3>
-    <p>Aktie oder ETF über Name, WKN oder ISIN suchen.</p>
-  </div>
-  <div class="flow-step">
-    <span class="n">2</span>
-    <h3>Kosten je Broker vergleichen</h3>
-    <p>Ordergebühren für 250, 1.000 und 5.000 EUR, plus eigener Rechner.</p>
-  </div>
-  <div class="flow-step">
-    <span class="n">3</span>
-    <h3>Beim günstigsten kaufen</h3>
-    <p>Direkt zum Anbieter. Werbelinks sind als solche gekennzeichnet.</p>
-  </div>
-</div>
+<form class="finder" role="search" action="{{ cfg.path_prefix }}/" data-finder>
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+    <circle cx="9" cy="9" r="5.5"/><path d="m17.5 17.5-4.5-4.5" stroke-linecap="round"/>
+  </svg>
+  <input class="finder-input" type="search" name="q" placeholder="Aktie oder ETF suchen, z. B. SAP, DE0007164600, MSCI World"
+         autocomplete="off" aria-label="Aktie oder ETF suchen" data-finder-input>
+  <div class="finder-results" role="listbox" data-finder-results hidden></div>
+  <p class="finder-hint">{{ overview|length }} Aktien und {{ etf_overview|length }} ETFs im Index. Ohne JavaScript: die vollständigen Listen weiter unten.</p>
+</form>
 
 <div class="section-head">
-  <h2>Womit die Seite vergleicht</h2>
+  <h2>Wo Broker gerade am günstigsten sind</h2>
+  <p>Einmalkauf über drei Ordervolumina, jeweils die drei günstigsten Broker. Grundlage für jede Aktien- und ETF-Seite.</p>
 </div>
-<div class="cats">
-  <a class="cat" href="#aktien">
-    <span class="c-num">{{ overview|length }}</span>
-    <h3>Aktien</h3>
-    <p>Einzelwerte aus DAX, MDAX und den großen US-Titeln. Kosten, Kennzahlen, Dividenden, Meldungen.</p>
-  </a>
-  <a class="cat" href="#etfs">
-    <span class="c-num">{{ etf_overview|length }}</span>
-    <h3>ETFs</h3>
-    <p>Breit gestreute Fonds auf MSCI World, S&amp;P 500 und mehr. Mit TER, Replikation und Ertragsverwendung.</p>
-  </a>
-  <a class="cat" href="#broker">
-    <span class="c-num">{{ brokers|length }}</span>
-    <h3>Broker</h3>
-    <p>Neobroker und Filialbanken mit ihrem Gebührenmodell. Die Grundlage jeder Vergleichstabelle.</p>
-  </a>
+<div class="lb">
+  {% for col in leaderboard %}
+  <div class="lb-col">
+    <p class="lb-size">Einmalkauf {{ col.size|num(0) }} EUR</p>
+    {% for q in col.rows %}
+    <div class="lb-row{{ ' lb-1' if loop.first }}">
+      <span class="lb-rank">{{ loop.index }}</span>
+      <span class="lb-name">{{ q.broker.name }}</span>
+      <span class="lb-cost">{{ q.cost|eur }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
+<p class="finder-hint" style="margin-top:12px">Werte noch nicht final geprüft. Ohne Depotgebühren, ohne Spread, ohne monatliche Abos.</p>
 
-<div class="section-head">
-  <h2>Auf jeder Aktien- und ETF-Seite</h2>
-</div>
-<ul class="info-list">
-  <li>Günstigster Broker je Ordervolumen, sofort sichtbar</li>
-  <li>Vollständige Kostentabelle plus Rechner für das eigene Volumen</li>
-  <li>Kennzahlen: Kurs, Marktkapitalisierung, KGV, Kurs-Buchwert</li>
-  <li>Dividendenrendite, Ausschüttungsquote und letzte Zahlungen</li>
-  <li>Kurze Zusammenfassungen von Meldungen, jeweils mit Quellenlink</li>
-  <li>Stand und Datenquelle bei jeder Zahl</li>
-</ul>
-
-<p class="sources-strip">
-  Zahlen von Yahoo Finance und Stooq, Geschäftsberichten und öffentlichen
-  Meldungen. Broker-Gebühren handgepflegt, Stand siehe Fußzeile. Keine
-  Anlageberatung, keine Kaufempfehlung, keine Order- oder Zahlungsfunktion.
-</p>
-
-<section class="panel" id="aktien" data-listing>
-  <div class="panel-head"><h2>Alle Aktien</h2></div>
+<section class="block" id="aktien" data-listing style="margin-top:44px">
+  <h2>Alle Aktien</h2>
   <div class="filterbar">
     <div class="field grow">
       <label for="f-stock">Suche</label>
@@ -133,9 +74,7 @@
           <td class="num">
             {% if row.has_data and row.data.price is not none %}
               {{ row.data.price|num }} {{ row.data.currency or row.stock.currency }}
-            {% else %}
-              <span class="muted">wird geladen</span>
-            {% endif %}
+            {% else %}<span class="muted">wird geladen</span>{% endif %}
           </td>
         </tr>
         {% endfor %}
@@ -144,8 +83,8 @@
   </div>
 </section>
 
-<section class="panel" id="etfs" data-listing>
-  <div class="panel-head"><h2>Alle ETFs</h2></div>
+<section class="block" id="etfs" data-listing>
+  <h2>Alle ETFs</h2>
   <div class="filterbar">
     <div class="field grow">
       <label for="f-etf">Suche</label>
@@ -176,9 +115,7 @@
           <td class="num">
             {% if row.has_data and row.data.price is not none %}
               {{ row.data.price|num }} {{ row.data.currency or row.etf.currency }}
-            {% else %}
-              <span class="muted">wird geladen</span>
-            {% endif %}
+            {% else %}<span class="muted">wird geladen</span>{% endif %}
           </td>
         </tr>
         {% endfor %}
@@ -187,14 +124,12 @@
   </div>
 </section>
 
-<section class="panel" id="broker">
-  <div class="panel-head"><h2>Broker im Vergleich</h2></div>
-  <p class="panel-lead">Diese Gebührenmodelle liegen jeder Aktien- und ETF-Seite zugrunde.</p>
+<section class="block" id="broker">
+  <h2>Broker im Vergleich</h2>
+  <p class="block-lead">Diese Gebührenmodelle liegen jeder Aktien- und ETF-Seite zugrunde.</p>
   <div class="table-scroll">
     <table class="listing">
-      <thead>
-        <tr><th>Broker</th><th>Handelsplatz</th><th>Konditionen</th></tr>
-      </thead>
+      <thead><tr><th>Broker</th><th>Handelsplatz</th><th>Konditionen</th></tr></thead>
       <tbody>
         {% for b in brokers %}
         <tr>

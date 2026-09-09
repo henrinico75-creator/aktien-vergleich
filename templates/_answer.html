@@ -1,0 +1,35 @@
+{# Antwort-Block: Kopf (guenstigster Broker + Kosten) und Balkendiagramm
+   ueber alle Broker fuer EIN Ordervolumen. block: {size, rows}.
+   maxcost: hoechster Kostenwert im block (Bezug fuer die Balkenlaenge). #}
+{% macro answer(block, maxcost) %}
+{% set rows = block.rows %}
+{% set bc = rows[0].cost %}
+{% set best = rows | selectattr('cost', 'equalto', bc) | list %}
+<div class="answer-head">
+  <span class="answer-who" data-answer-who>
+    {%- if best|length > 1 -%}{{ best|length }} Broker gleichauf{%- else -%}{{ best[0].broker.name }}{%- endif -%}
+  </span>
+  <span class="answer-cost" data-answer-cost>{{ bc|eur }}</span>
+</div>
+<p class="answer-sub" data-answer-sub>
+  {%- if best|length > 1 -%}
+    {{ best[:3] | map(attribute='broker.name') | join(', ') }}{% if best|length > 3 %} und weitere{% endif %}
+  {%- else -%}
+    {{ best[0].broker.venue }}, {{ (best[0].cost_ratio * 100)|pct }} % vom Ordervolumen
+  {%- endif -%}
+</p>
+<div class="chart" data-chart>
+  {% for q in rows %}
+  {% set w = 3 if q.cost == 0 else (q.cost / maxcost * 100)|round(1) %}
+  <div class="chart-row{{ ' is-best' if q.cost == bc }}">
+    <span class="chart-name">{{ q.broker.name }}
+      {%- if loop.first and q.cost > 0 %}<span class="chart-tag">günstigster</span>
+      {%- elif loop.first and q.cost == 0 %}<span class="chart-tag">0 EUR</span>{% endif %}
+      {%- if q.broker.subscription_eur and q.broker.subscription_eur > 0 %}<span class="chart-sub-tag">+ {{ q.broker.subscription_eur|num }} EUR/Mon.</span>{% endif %}
+    </span>
+    <span class="chart-track"><span class="chart-fill" style="width: {{ w }}%"></span></span>
+    <span class="chart-cost">{{ q.cost|eur }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endmacro %}

@@ -8,7 +8,6 @@
 <meta name="color-scheme" content="light dark">
 {% block canonical %}{% endblock %}
 <script>
-  /* Theme vor dem ersten Paint setzen, damit es nicht flackert. */
   try {
     var t = localStorage.getItem("theme");
     if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
@@ -16,51 +15,58 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="{{ cfg.path_prefix }}/static/style.css">
 </head>
 <body>
+<a class="skip" href="#main">Zum Inhalt</a>
 <header class="site-head">
   <div class="head-inner">
     <a class="brand" href="{{ cfg.path_prefix }}/" aria-label="{{ cfg.site_name }}, Startseite">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <rect x="2" y="11" width="4" height="7" rx="1" fill="currentColor" opacity=".45"/>
-        <rect x="8" y="7" width="4" height="11" rx="1" fill="currentColor" opacity=".7"/>
-        <rect x="14" y="3" width="4" height="15" rx="1" fill="var(--brand)"/>
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <rect x="2" y="12" width="4" height="8" rx="1" fill="currentColor" opacity=".38"/>
+        <rect x="9" y="7" width="4" height="13" rx="1" fill="currentColor" opacity=".62"/>
+        <rect x="16" y="2" width="4" height="18" rx="1" fill="var(--accent)"/>
       </svg>
-      <span>Aktien<span class="dot">&middot;</span>Kosten</span>
+      <span>{{ cfg.site_name }}</span>
     </a>
-    <nav class="site-nav" aria-label="Hauptnavigation">
-      <a href="{{ cfg.path_prefix }}/">Aktien</a>
-      <a href="{{ cfg.path_prefix }}/#etfs">ETFs</a>
-      <a href="{{ cfg.path_prefix }}/#broker">Broker</a>
-      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Farbschema wechseln" title="Farbschema: System">&#x25D0;</button>
-    </nav>
+    <form class="hsearch" role="search" action="{{ cfg.path_prefix }}/" data-hsearch>
+      <svg class="hsearch-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="7" cy="7" r="4.5"/><path d="m14 14-3.6-3.6" stroke-linecap="round"/>
+      </svg>
+      <input type="search" name="q" placeholder="Aktie oder ETF" autocomplete="off"
+             aria-label="Aktie oder ETF suchen" data-hsearch-input>
+      <div class="hsearch-results" role="listbox" data-hsearch-results hidden></div>
+    </form>
+    <button type="button" class="theme-toggle" data-theme-toggle aria-label="Farbschema wechseln" title="Farbschema: System">&#x25D0;</button>
   </div>
 </header>
-{% if cfg.prototype_banner %}
-<div class="notice">
-  <div class="wrap">Prototyp. Broker-Gebühren und Kennzahlen sind noch nicht abschließend geprüft.</div>
-</div>
-{% endif %}
-<main class="wrap main">
+
+<main id="main" class="wrap main">
 {% block content %}{% endblock %}
 </main>
+
 <footer class="site-foot">
-  <div class="wrap">
+  <div class="wrap foot-grid">
+    <div>
+      <p class="foot-strong">{{ cfg.site_name }}</p>
+      <p class="foot-text">
+        {% if cfg.prototype_banner %}Prototyp. Broker-Gebühren und Kennzahlen sind noch nicht abschließend geprüft.
+        {% endif %}Zahlen von Yahoo Finance und Stooq, Geschäftsberichten und
+        öffentlichen Meldungen. Keine Anlageberatung, keine Kaufempfehlung,
+        keine Order- oder Zahlungsfunktion.
+      </p>
+    </div>
     <nav class="foot-links" aria-label="Rechtliches">
       <a href="{{ cfg.path_prefix }}/impressum/">Impressum</a>
       <a href="{{ cfg.path_prefix }}/datenschutz/">Datenschutz</a>
       <a href="{{ cfg.path_prefix }}/werbehinweis/">Werbehinweis</a>
     </nav>
-    <p class="disclaimer">
-      Keine Anlageberatung. Alle Angaben ohne Gewähr, Kurse und Kennzahlen
-      können veraltet sein. Links zu Brokern können Werbelinks sein, siehe
-      Werbehinweis.
-    </p>
-    <p class="built">Seitenbau: {{ built_at }}. Betreiber: {{ cfg.owner_name }}.</p>
   </div>
+  <div class="wrap"><p class="built">Seitenbau: {{ built_at }}. Betreiber: {{ cfg.owner_name }}.</p></div>
 </footer>
+
+<script>window.__searchIndex = {{ search_index_json|safe }};</script>
 <script src="{{ cfg.path_prefix }}/static/app.js" defer></script>
 </body>
 </html>

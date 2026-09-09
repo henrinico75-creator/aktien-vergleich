@@ -1,126 +1,83 @@
 {% extends "base.html" %}
 {% import "_costtable.html" as ct %}
+{% import "_answer.html" as ans %}
 {% set cur = data.currency or etf.currency %}
 {% set ref_size = 1000 if 1000 in sizes else sizes[0] %}
-{% set ref = (matrix | selectattr('size', 'equalto', ref_size) | list | first) %}
-{% set rrows = ref.rows %}
-{% set best_cost = rrows[0].cost %}
-{% set best = rrows | selectattr('cost', 'equalto', best_cost) | list %}
-{% set rest = rrows[best|length : best|length + 3] %}
 {% block title %}{{ etf.name }} kaufen: Broker-Kostenvergleich | {{ cfg.site_name }}{% endblock %}
 {% block description %}{{ etf.name }} (ISIN {{ etf.isin }}) günstig kaufen: Ordergebühren im Broker-Vergleich, TER, Replikation und Ertragsverwendung.{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/etf/{{ etf.slug }}/">{% endblock %}
 
 {% block content %}
-<nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Aktien</a> / <a href="{{ cfg.path_prefix }}/#etfs">ETFs</a> / {{ etf.name }}</nav>
-
-<section class="hero">
+<div class="id-strip">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ cfg.path_prefix }}/">Start</a> / <a href="{{ cfg.path_prefix }}/#etfs">ETFs</a> / {{ etf.name }}</nav>
+  <p class="id-kind">ETF</p>
   <h1>{{ etf.name }} kaufen: Kosten je Broker</h1>
-  <p class="ident">
+  <p class="id-meta">
     <span>WKN <b>{{ etf.wkn }}</b></span>
     <span>ISIN <b>{{ etf.isin }}</b></span>
     <span>Ticker <b>{{ etf.ticker }}</b></span>
     <span>{{ etf.index }}</span>
-    <span>TER {{ etf.ter|num }} % p.a.</span>
+    <span>TER <b>{{ etf.ter|num }} %</b> p.a.</span>
   </p>
   {% if has_data %}
-  <p class="hero-note">
-    Kurs {{ data.price|num }} {{ cur }}. Laufende Kosten (TER) {{ etf.ter|num }} % pro Jahr.
-    Datenquelle {{ data.source }}, Stand {{ data.fetched_at }}.
-  </p>
+  <p class="id-price">Kurs {{ data.price|num }} {{ cur }}. Quelle {{ data.source }}, Stand {{ data.fetched_at }}.</p>
   {% else %}
-  <p class="hero-note warn">Kurs für diesen ETF wird noch geladen. Die Kostentabelle unten ist davon unabhängig.</p>
+  <p class="id-price warn">Kurs wird noch geladen. Der Kostenvergleich unten ist davon unabhängig.</p>
   {% endif %}
-</section>
+</div>
 
-<section class="result" data-result aria-labelledby="result-label">
-  <p class="result-label" id="result-label">Günstigster Broker für einen Einmalkauf über <span data-ref-size>{{ ref_size|num(0) }} EUR</span></p>
-  <div class="result-main">
-    <span class="result-who" data-result-who>
-      {%- if best|length > 1 -%}{{ best|length }} Broker gleichauf{%- else -%}{{ best[0].broker.name }}{%- endif -%}
-    </span>
-    <span class="result-cost" data-result-cost>{{ best_cost|eur }}</span>
-  </div>
-  <p class="result-meta" data-result-meta>
-    {%- if best|length > 1 -%}
-      {{ best[:3] | map(attribute='broker.name') | join(', ') }}{% if best|length > 3 %} und weitere{% endif %}
-    {%- else -%}
-      {{ best[0].broker.venue }}, {{ (best[0].cost_ratio * 100)|pct }} % vom Ordervolumen
-    {%- endif -%}
-  </p>
-  <div class="result-sizes" data-result-sizes hidden>
+<section class="answer" data-answer aria-label="Günstigster Broker">
+  <p class="block-lead" style="margin:0 0 14px">Günstigster Broker für einen Einmalkauf über <span data-ref-size>{{ ref_size|num(0) }} EUR</span>. Bei einem Sparplan zählt vor allem die TER ({{ etf.ter|num }} % pro Jahr), nicht die einmalige Ordergebühr.</p>
+  <div class="answer-seg" data-answer-seg hidden>
     {% for s in sizes %}
     <button type="button" data-size="{{ s }}" aria-pressed="{{ 'true' if s == ref_size else 'false' }}">{{ s|num(0) }} EUR</button>
     {% endfor %}
   </div>
-  <p class="result-alt" data-result-alt>
-    {%- if rest -%}Danach: <strong>{{ rest | map(attribute='broker.name') | join('</strong>, <strong>') | safe }}</strong>.{%- endif -%}
-  </p>
-  <div class="result-foot">
-    <span>Beispieldaten. Bei einem Sparplan zählt vor allem die TER, nicht die Ordergebühr.</span>
+  {% for block in matrix %}
+  {% if block.size == ref_size %}
+  {{ ans.answer(block, block.rows | map(attribute='cost') | max) }}
+  {% endif %}
+  {% endfor %}
+  <div class="answer-foot">
+    <span>Beispieldaten, noch nicht final geprüft. Ohne Depotgebühren, ohne Spread, ohne Abos.</span>
     <a href="#rechner">Eigenes Volumen rechnen</a>
   </div>
 </section>
 
-<section class="panel">
-  <div class="panel-head"><h2>ETF-Merkmale</h2><span class="badge">Beispieldaten</span></div>
-  <dl class="stat-grid">
-    <div class="stat"><dt>Abgebildeter Index</dt><dd class="text">{{ etf.index }}</dd></div>
-    <div class="stat"><dt>Laufende Kosten (TER)</dt><dd>{{ etf.ter|num }} % p.a.</dd></div>
-    <div class="stat"><dt>Replikation</dt><dd class="text">{{ etf.replication }}</dd></div>
-    <div class="stat"><dt>Ertragsverwendung</dt><dd class="text">{{ etf.distribution }}</dd></div>
-    <div class="stat"><dt>Fondsdomizil</dt><dd class="text">{{ etf.domicile }}</dd></div>
-    {% if has_data and data.dividend_yield_pct is not none %}
-    <div class="stat"><dt>Ausschüttungsrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
-    {% endif %}
-    {% if has_data and data.price is not none %}
-    <div class="stat"><dt>Kurs</dt><dd>{{ data.price|num }} {{ cur }}</dd></div>
-    {% endif %}
-  </dl>
-  <p class="foot-note">{{ etf.note }} TER, Replikation und Ertragsverwendung vor einer Kaufentscheidung im KIID bzw. Factsheet des Anbieters prüfen.</p>
-</section>
-
-<section class="panel">
-  <div class="panel-head">
-    <h2>Ordergebühren beim Einmalkauf</h2>
-    <span class="badge">Beispieldaten</span>
-  </div>
-  <p class="panel-lead">
-    Gesamtkosten einer einzelnen Kauforder. Ohne Depotgebühren, ohne Spread,
-    ohne monatliche Abos. Bei einem ETF ist die laufende Kostenquote
-    (TER {{ etf.ter|num }} % pro Jahr) meist der größere Posten als die einmalige
-    Ordergebühr. Der Balken zeigt die Kosten im Verhältnis zum teuersten hier
-    gelisteten Broker.
-  </p>
-
+<div class="block">
+  <h2>Alle Broker und weitere Ordervolumina</h2>
+  <p class="block-lead">ETF-Sparpläne sind bei allen hier gelisteten Neobrokern kostenlos. Für einen langfristigen Sparplan zählt die TER, nicht die einmalige Ordergebühr.</p>
   {% for block in matrix %}
   {% set maxcost = block.rows | map(attribute='cost') | max %}
-  {% if block.size == ref_size %}
-  <h3 class="matrix-size">Ordervolumen {{ block.size|num(0) }} EUR</h3>
-  {{ ct.cost_table(block, maxcost) }}
-  {% endif %}
-  {% endfor %}
-
-  {% for block in matrix %}
-  {% set maxcost = block.rows | map(attribute='cost') | max %}
-  {% if block.size != ref_size %}
-  <details class="more">
-    <summary>Ordervolumen {{ block.size|num(0) }} EUR anzeigen</summary>
+  <details class="more"{{ ' open' if block.size == ref_size }}>
+    <summary>Ordervolumen {{ block.size|num(0) }} EUR</summary>
     {{ ct.cost_table(block, maxcost) }}
   </details>
-  {% endif %}
   {% endfor %}
-
-  <p class="foot-note">
-    ETF-Sparpläne sind bei allen hier gelisteten Neobrokern kostenlos. Für
-    einen langfristigen Sparplan zählt vor allem die TER, nicht die einmalige
-    Ordergebühr.
-  </p>
-</section>
+</div>
 
 {% include "_calculator.html" %}
 
-<section class="disclaimer-box">
-  <p><strong>Keine Anlageberatung.</strong> Diese Seite vergleicht Kosten und stellt Fakten zusammen. Sie enthält keine Kauf- oder Verkaufsempfehlung und keine Order- oder Zahlungsfunktion.</p>
-</section>
+<div class="block">
+  <h2>Mehr zu diesem ETF</h2>
+  <div class="panel">
+    <div class="panel-head"><h3>ETF-Merkmale</h3><span class="badge">Beispieldaten</span></div>
+    <dl class="figures">
+      <div><dt>Abgebildeter Index</dt><dd class="text">{{ etf.index }}</dd></div>
+      <div><dt>Laufende Kosten (TER)</dt><dd>{{ etf.ter|num }} % p.a.</dd></div>
+      <div><dt>Replikation</dt><dd class="text">{{ etf.replication }}</dd></div>
+      <div><dt>Ertragsverwendung</dt><dd class="text">{{ etf.distribution }}</dd></div>
+      <div><dt>Fondsdomizil</dt><dd class="text">{{ etf.domicile }}</dd></div>
+      {% if has_data and data.dividend_yield_pct is not none %}
+      <div><dt>Ausschüttungsrendite</dt><dd>{{ data.dividend_yield_pct|pct }}</dd></div>
+      {% endif %}
+      {% if has_data and data.price is not none %}
+      <div><dt>Kurs</dt><dd>{{ data.price|num }} {{ cur }}</dd></div>
+      {% endif %}
+    </dl>
+    <p class="foot-note">{{ etf.note }} TER, Replikation und Ertragsverwendung vor einer Kaufentscheidung im KIID bzw. Factsheet des Anbieters prüfen.</p>
+  </div>
+</div>
+
+<p class="disclaimer-line"><strong>Keine Anlageberatung.</strong> Diese Seite vergleicht Kosten und stellt Fakten zusammen. Sie enthält keine Kauf- oder Verkaufsempfehlung und keine Order- oder Zahlungsfunktion.</p>
 {% endblock %}

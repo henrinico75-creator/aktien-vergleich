@@ -4,10 +4,8 @@
 {% block canonical %}<link rel="canonical" href="{{ cfg.base_url }}/{{ slug }}/">{% endblock %}
 
 {% block content %}
-<section class="hero">
+<article class="prose">
   <h1>{{ title }}</h1>
-</section>
-<section class="panel prose">
   {{ body|safe }}
-</section>
+</article>
 {% endblock %}
