@@ -147,6 +147,7 @@
     var costEl = panel.querySelector("[data-result-cost]");
     var metaEl = panel.querySelector("[data-result-meta]");
     var altEl = panel.querySelector("[data-result-alt]");
+    var refSizeEl = panel.querySelector("[data-ref-size]");
     if (!box) return;
 
     function cost(b, v) {
@@ -162,13 +163,14 @@
       var min = list[0].c;
       var best = list.filter(function (x) { return Math.abs(x.c - min) < 1e-9; });
       costEl.textContent = deEUR.format(min) + " EUR";
+      if (refSizeEl) refSizeEl.textContent = deInt.format(v) + " EUR";
       if (best.length > 1) {
         whoEl.textContent = best.length + " Broker gleichauf";
         metaEl.textContent = best.slice(0, 3).map(function (x) { return x.b.name; }).join(", ")
           + (best.length > 3 ? " und weitere" : "");
       } else {
         whoEl.textContent = best[0].b.name;
-        metaEl.textContent = best[0].b.venue + " · "
+        metaEl.textContent = best[0].b.venue + ", "
           + dePct.format(v ? (min / v * 100) : 0) + " % vom Ordervolumen";
       }
       var rest = list.slice(best.length, best.length + 3).map(function (x) { return x.b.name; });

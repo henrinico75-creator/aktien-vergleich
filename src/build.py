@@ -158,7 +158,8 @@ def build() -> None:
     _write(DIST / ".nojekyll", "")
 
     matrix = _cost_matrix(brokers, sizes)
-    cheapest_1000 = rank_brokers(brokers, 1000)[0]
+    ranked_1000 = rank_brokers(brokers, 1000)
+    cheapest_1000 = ranked_1000[0]
 
     stock_tpl = env.get_template("stock.html")
     overview = []
@@ -213,6 +214,8 @@ def build() -> None:
             etf_overview=etf_overview,
             brokers=brokers,
             cheapest=cheapest_1000,
+            cheapest_rows=ranked_1000[:4],
+            priciest_row=ranked_1000[-1],
         ),
     )
 

@@ -8,11 +8,11 @@
 
 <section class="hero">
   <h1>{{ broker.name }}: Gebühren und Konditionen</h1>
-  <ul class="chips">
-    <li class="chip">Handelsplatz {{ broker.venue }}</li>
-    {% if broker.free_above is not none %}<li class="chip">0 EUR ab {{ broker.free_above|num(0) }} EUR</li>{% endif %}
-    {% if broker.subscription_eur %}<li class="chip">Abo {{ broker.subscription_eur|num }} EUR/Monat</li>{% endif %}
-  </ul>
+  <p class="ident">
+    <span>Handelsplatz <b>{{ broker.venue }}</b></span>
+    {% if broker.free_above is not none %}<span>0 EUR ab <b>{{ broker.free_above|num(0) }} EUR</b></span>{% endif %}
+    {% if broker.subscription_eur %}<span>Abo <b>{{ broker.subscription_eur|num }} EUR/Monat</b></span>{% endif %}
+  </p>
   <p class="lede">{{ broker.note }}</p>
 </section>
 

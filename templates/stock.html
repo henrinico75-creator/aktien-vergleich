@@ -16,12 +16,12 @@
 
 <section class="hero">
   <h1>{{ stock.name }} Aktie kaufen: Kosten je Broker</h1>
-  <ul class="chips">
-    <li class="chip">WKN {{ stock.wkn }}</li>
-    <li class="chip">ISIN {{ stock.isin }}</li>
-    <li class="chip">Ticker {{ stock.ticker }}</li>
-    <li class="chip">{{ stock.sector }}</li>
-  </ul>
+  <p class="ident">
+    <span>WKN <b>{{ stock.wkn }}</b></span>
+    <span>ISIN <b>{{ stock.isin }}</b></span>
+    <span>Ticker <b>{{ stock.ticker }}</b></span>
+    <span>{{ stock.sector }}</span>
+  </p>
   {% if has_data %}
   <p class="hero-note">
     Kurs {{ data.price|num }} {{ cur }}{% if data.market_cap %}, Marktkapitalisierung {{ data.market_cap|mktcap }} {{ cur }}{% endif %}.
@@ -33,7 +33,7 @@
 </section>
 
 <section class="result" data-result aria-labelledby="result-label">
-  <p class="result-label" id="result-label">Am günstigsten &middot; Einmalkauf <span data-ref-size>{{ ref_size|num(0) }} EUR</span></p>
+  <p class="result-label" id="result-label">Günstigster Broker für einen Einmalkauf über <span data-ref-size>{{ ref_size|num(0) }} EUR</span></p>
   <div class="result-main">
     <span class="result-who" data-result-who>
       {%- if best|length > 1 -%}{{ best|length }} Broker gleichauf{%- else -%}{{ best[0].broker.name }}{%- endif -%}
@@ -44,7 +44,7 @@
     {%- if best|length > 1 -%}
       {{ best[:3] | map(attribute='broker.name') | join(', ') }}{% if best|length > 3 %} und weitere{% endif %}
     {%- else -%}
-      {{ best[0].broker.venue }} &middot; {{ (best[0].cost_ratio * 100)|pct }} % vom Ordervolumen
+      {{ best[0].broker.venue }}, {{ (best[0].cost_ratio * 100)|pct }} % vom Ordervolumen
     {%- endif -%}
   </p>
   <div class="result-sizes" data-result-sizes hidden>

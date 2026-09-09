@@ -16,13 +16,13 @@
 
 <section class="hero">
   <h1>{{ etf.name }} kaufen: Kosten je Broker</h1>
-  <ul class="chips">
-    <li class="chip">WKN {{ etf.wkn }}</li>
-    <li class="chip">ISIN {{ etf.isin }}</li>
-    <li class="chip">Ticker {{ etf.ticker }}</li>
-    <li class="chip">{{ etf.index }}</li>
-    <li class="chip">TER {{ etf.ter|num }} % p.a.</li>
-  </ul>
+  <p class="ident">
+    <span>WKN <b>{{ etf.wkn }}</b></span>
+    <span>ISIN <b>{{ etf.isin }}</b></span>
+    <span>Ticker <b>{{ etf.ticker }}</b></span>
+    <span>{{ etf.index }}</span>
+    <span>TER {{ etf.ter|num }} % p.a.</span>
+  </p>
   {% if has_data %}
   <p class="hero-note">
     Kurs {{ data.price|num }} {{ cur }}. Laufende Kosten (TER) {{ etf.ter|num }} % pro Jahr.
@@ -34,7 +34,7 @@
 </section>
 
 <section class="result" data-result aria-labelledby="result-label">
-  <p class="result-label" id="result-label">Am günstigsten &middot; Einmalkauf <span data-ref-size>{{ ref_size|num(0) }} EUR</span></p>
+  <p class="result-label" id="result-label">Günstigster Broker für einen Einmalkauf über <span data-ref-size>{{ ref_size|num(0) }} EUR</span></p>
   <div class="result-main">
     <span class="result-who" data-result-who>
       {%- if best|length > 1 -%}{{ best|length }} Broker gleichauf{%- else -%}{{ best[0].broker.name }}{%- endif -%}
@@ -45,7 +45,7 @@
     {%- if best|length > 1 -%}
       {{ best[:3] | map(attribute='broker.name') | join(', ') }}{% if best|length > 3 %} und weitere{% endif %}
     {%- else -%}
-      {{ best[0].broker.venue }} &middot; {{ (best[0].cost_ratio * 100)|pct }} % vom Ordervolumen
+      {{ best[0].broker.venue }}, {{ (best[0].cost_ratio * 100)|pct }} % vom Ordervolumen
     {%- endif -%}
   </p>
   <div class="result-sizes" data-result-sizes hidden>
