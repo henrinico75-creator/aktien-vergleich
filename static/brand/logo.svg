@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224 44" role="img" aria-label="Aktien-Kosten">
+  <style>
+    .ink { fill: #0c0f0e }
+    .wm {
+      fill: #0c0f0e;
+      font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-weight: 700; font-size: 25px; letter-spacing: -1.2px;
+    }
+    @media (prefers-color-scheme: dark) { .ink, .wm { fill: #eef0ec } }
+  </style>
+  <rect class="ink" x="0" y="6"  width="24" height="4.5" rx="2.25" opacity=".9"/>
+  <rect class="ink" x="0" y="19" width="17" height="4.5" rx="2.25" opacity=".5"/>
+  <rect          x="0" y="32" width="10" height="4.5" rx="2.25" fill="#0e9f6e"/>
+  <text class="wm" x="38" y="31">Aktien-Kosten</text>
+</svg>

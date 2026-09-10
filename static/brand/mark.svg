@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" role="img" aria-label="Aktien-Kosten">
+  <rect x="4" y="4"  width="21" height="4" rx="2" fill="currentColor" opacity=".9"/>
+  <rect x="4" y="12" width="15" height="4" rx="2" fill="currentColor" opacity=".5"/>
+  <rect x="4" y="20" width="9"  height="4" rx="2" fill="#0e9f6e"/>
+</svg>

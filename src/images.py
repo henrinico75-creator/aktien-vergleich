@@ -118,19 +118,22 @@ def logo_jobs() -> list[tuple[str, str, str | None]]:
     base = (
         f"{BRAND}\n\n"
         "Task: a compact logo mark plus the wordmark \"Aktien-Kosten\". "
-        "The mark is three ascending vertical bars (short, medium, tall), the "
-        "tallest bar emerald, the others ink. Wordmark set tight in a "
-        "geometric grotesque, ink color. Mark left of the wordmark, aligned to "
-        "the same cap height. Plenty of clear space around it. "
-        "Flat, single scale, no tagline, no container shape."
+        "The mark is three flush-left horizontal bars stacked with equal gaps, "
+        "each shorter than the one above (descending right edge, like a small "
+        "ranked bar chart trending down). Top bar ink at full strength, middle "
+        "bar ink at about half strength, bottom (shortest) bar solid emerald. "
+        "Wordmark set tight in a geometric grotesque, ink color, to the right "
+        "of the mark, vertically centered on it. Generous clear space. "
+        "Flat, single scale, no tagline, no container shape, no outline."
     )
     return [
         ("logo.png", base + " Background: the warm off-white #fbfbf9.", "16:9"),
-        ("logo-dark.png", base + " Background: near-black #0c0f0e, wordmark in "
-         "off-white, tallest bar emerald.", "16:9"),
-        ("mark.png", f"{BRAND}\n\nTask: only the icon, no text. Three ascending "
-         "vertical bars (short, medium, tall), tallest emerald, others ink, on "
-         "a transparent or off-white square. Centered, generous padding.", "1:1"),
+        ("logo-dark.png", base + " Background: near-black #0c0f0e, wordmark and "
+         "the two ink bars in off-white, bottom bar emerald.", "16:9"),
+        ("mark.png", f"{BRAND}\n\nTask: only the icon, no text. Three flush-left "
+         "horizontal bars stacked with equal gaps, each shorter than the one "
+         "above, top bar ink, middle bar ink at half strength, bottom shortest "
+         "bar emerald. On an off-white square, centered, generous padding.", "1:1"),
     ]
 
 
