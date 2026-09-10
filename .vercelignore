@@ -1,0 +1,8 @@
+# Nicht in den Vercel-Build hochladen. Der Build braucht nur src/, templates/,
+# static/, content/, data/ (ohne generated), config.yaml, requirements.txt.
+.claude/
+.github/
+marketing/
+tests/
+README.md
+CLAUDE.md

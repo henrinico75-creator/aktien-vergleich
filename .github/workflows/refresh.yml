@@ -1,0 +1,27 @@
+name: refresh
+
+# Taeglicher Neubau, damit Kurse und Kennzahlen aktuell bleiben.
+# Ruft einen Vercel Deploy Hook auf. Ohne gesetztes Secret passiert nichts.
+#
+# Einrichten: Vercel -> Project -> Settings -> Git -> Deploy Hooks -> anlegen,
+# URL kopieren, in GitHub -> Settings -> Secrets and variables -> Actions
+# als Secret VERCEL_DEPLOY_HOOK hinterlegen.
+
+on:
+  schedule:
+    - cron: "30 5 * * *"   # taeglich 05:30 UTC
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Vercel Deploy Hook aufrufen
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "Kein VERCEL_DEPLOY_HOOK gesetzt, ueberspringe."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" && echo "Deploy angestossen."

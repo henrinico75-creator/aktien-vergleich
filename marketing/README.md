@@ -35,6 +35,18 @@ keine Kaufempfehlungen, kein Hype, Zahlen nur aus `data/`, Werbung
 kennzeichnen, kein kopierter Fremdtext, solange der Prototyp-Banner steht
 Gebuehrenaussagen als vorlaeufig markieren.
 
+## Grafiken erzeugen (optional)
+
+Nach dem Entwurf, wenn ein `GEMINI_API_KEY` gesetzt ist:
+
+```
+python -m src.images marketing 2026-09-09
+```
+
+Erzeugt aus `plan.md` und `instagram.md` je ein 1:1- und ein 9:16-Bild in
+`marketing/2026-09-09/img/`. Nutzt nur Wortlaut und Zahlen aus den Entwuerfen,
+erfindet nichts. Ergebnis vor Verwendung sichten.
+
 ## Nach dem Entwurf
 
 Du postest selbst. Was gepostet wurde, kannst du in der jeweiligen Datei

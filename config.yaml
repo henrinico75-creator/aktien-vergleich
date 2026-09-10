@@ -3,13 +3,14 @@
 site_name: "Aktien-Kosten"
 tagline: "Wo kaufe ich welche Aktie am günstigsten?"
 
-# Vollständige URL für sitemap.xml und canonical. Vor Launch anpassen oder
-# über Umgebungsvariable SITE_BASE_URL setzen (z. B. in GitHub Actions).
-base_url: "https://USER.github.io/aktien-vergleich"
+# Vollständige URL für sitemap.xml und canonical. Auf Vercel über die
+# Umgebungsvariable SITE_BASE_URL setzen (Projekt-Domain oder eigene Domain).
+# Der Wert hier ist nur der lokale Vorgabewert.
+base_url: "https://aktien-vergleich.vercel.app"
 
-# Pfad-Prefix für Links und Assets INNERHALB der Seiten. Lokal leer lassen,
-# damit "python -m http.server -d dist" funktioniert. Auf GitHub Project Pages
-# den Repo-Namen setzen (z. B. aktien-vergleich) oder SITE_PATH_PREFIX nutzen.
+# Pfad-Prefix für Links und Assets INNERHALB der Seiten. Vercel liefert von
+# der Domain-Wurzel aus, daher leer. Nur für einen Betrieb unter einem
+# Unterpfad über SITE_PATH_PREFIX setzen.
 path_prefix: ""
 
 # Ordervolumina (EUR), für die die Kostentabelle je Aktie gerendert wird.

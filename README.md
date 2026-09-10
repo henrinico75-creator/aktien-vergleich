@@ -8,15 +8,16 @@ Kein Bestandteil des `Finanzen`-Repos. Anderes Ziel, anderer Rechtsrahmen.
 
 ## Status
 
-Prototyp, live auf GitHub Pages. Der Seitengenerator laeuft, Broker-Gebuehren
+Prototyp, gehostet auf Vercel. Der Seitengenerator laeuft, Broker-Gebuehren
 und der Aktien- und ETF-Datensatz sind Startwerte und noch nicht geprueft.
 
 ## Stack
 
 - Python 3.12, statischer Generator (Jinja2), kein Framework
 - `yfinance` fuer Kurse und Kennzahlen, Stooq als Fallback
-- Hosting: GitHub Pages (kostenlos), Alternative Cloudflare Pages
-- Automatik: GitHub Actions, taeglicher Cron baut die Seite neu
+- Hosting: Vercel (Build aus `vercel.json`, Deploy bei Push auf `main`)
+- CI: GitHub Actions `ci.yml` (Tests + Probebuild), `refresh.yml` stoesst
+  taeglich einen Vercel Deploy Hook an (Secret `VERCEL_DEPLOY_HOOK`)
 
 ## Aufbau
 
@@ -33,17 +34,24 @@ src/
                     (ETFs als etf-<slug>.json, ohne Meldungen)
   summarize.py      optional: eigene Kurzzusammenfassungen je Meldung,
                     nur mit ANTHROPIC_API_KEY, sonst no-op
+  images.py         optional: Bilder ueber Gemini "Nano Banana" (Logo,
+                    Marketing-Grafiken), nur mit GEMINI_API_KEY, sonst no-op.
+                    Laeuft nicht im Build, Ergebnisse werden committet.
   build.py          rendert templates/ nach dist/
 templates/          base, index, stock, etf, broker, legal, _calculator,
-                    _costtable (Jinja-Makro fuer die Kostentabelle je Volumen)
+                    _costtable, _answer (Jinja-Makros)
 content/            Impressum, Datenschutz, Werbehinweis (Markdown)
+marketing/          Social-/Blog-Entwuerfe (Subagent `marketing`), nichts live
 scripts/umlaut_fix.py   ASCII-Umschrift -> echte Umlaute im sichtbaren Text
 static/style.css    Design, ein Stylesheet, drei Theme-Zustaende (System/hell/dunkel)
-static/app.js       Progressive Enhancement: Theme-Umschalter, Suche/Filter/
-                    Sortierung der Listen, Ordervolumen-Umschalter im Ergebnis-
-                    Panel. Ohne JavaScript bleibt jede Seite voll nutzbar.
+static/app.js       Progressive Enhancement: Theme-Umschalter, Live-Suche im
+                    Kopf und auf der Startseite, Listen-Filter/Sortierung,
+                    Ordervolumen-Umschalter im Antwort-Block. Ohne JavaScript
+                    bleibt jede Seite voll nutzbar.
+static/brand/       Logo/Wortmarke aus src/images.py (falls erzeugt)
 dist/               generierte Website, nicht in Git
-.github/workflows/  build-deploy.yml
+vercel.json         Build- und Ausgabekonfiguration fuer Vercel
+.github/workflows/  ci.yml (Tests), refresh.yml (taeglicher Deploy-Hook)
 ```
 
 ## Lokal bauen (Windows, PowerShell)
@@ -73,6 +81,47 @@ Ohne `fetch` baut `build` trotzdem, dann mit Platzhaltern statt echten Zahlen.
 pytest                       # alle Tests
 pytest tests/test_brokers.py  # Kostenmodell
 ```
+
+## Deploy (Vercel)
+
+Einmalig, im Vercel-Konto:
+
+1. **New Project** -> GitHub-Repo `aktien-vergleich` importieren.
+2. Framework Preset **Other**. Build Command und Output Directory kommen aus
+   `vercel.json` (Build: `src.build`, Output: `dist`).
+3. **Environment Variables** setzen:
+   - `SITE_BASE_URL` = die Vercel-Domain oder die eigene Domain
+     (`https://…`, ohne Schraegstrich am Ende)
+   - `SITE_PATH_PREFIX` leer lassen
+4. Deploy. Danach loest jeder Push auf `main` automatisch einen Deploy aus.
+
+Der Vercel-Build ruft `src.fetch` fuer frische Kurse und dann `src.build`.
+`src.summarize` (eigene Meldungs-Zusammenfassungen) laeuft NICHT im Build,
+um API-Kosten pro Deploy zu vermeiden: bei Bedarf lokal `python -m src.summarize`
+vor einem Commit ausfuehren. Sauberer waere langfristig, `data/generated/` zu
+versionieren und per Cron-Action zu aktualisieren.
+
+Taeglicher Neubau fuer frische Kurse:
+
+5. Vercel -> Settings -> Git -> **Deploy Hooks** anlegen, URL kopieren.
+6. GitHub -> Settings -> Secrets and variables -> Actions -> Secret
+   `VERCEL_DEPLOY_HOOK` = diese URL. `refresh.yml` ruft sie taeglich auf.
+
+GitHub Pages wird nicht mehr verwendet (Workflow entfernt). Falls Pages im
+Repo noch aktiv ist: Settings -> Pages -> Source auf **None**.
+
+## Bilder (optional, Nano Banana)
+
+`src/images.py` erzeugt Bilder ueber Google Gemini. Schluessel aus Google AI
+Studio, dann in `.env` bzw. als Umgebungsvariable `GEMINI_API_KEY`.
+
+```powershell
+python -m src.images logo                     # Logo/Wortmarke -> static/brand/
+python -m src.images marketing 2026-09-09      # Grafiken -> marketing/<datum>/img/
+```
+
+Laeuft nicht im Build. Ergebnisse sichten, dann committen. Ohne Schluessel
+passiert nichts.
 
 ## Vor einer Veroeffentlichung offen (nicht startklar)
 
