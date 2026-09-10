@@ -23,7 +23,7 @@ def test_logo_jobs():
     assert len(jobs) == 3
     for name, prompt, ar in jobs:
         assert name.endswith(".png")
-        assert "Aktien-Kosten" in prompt or "aktien-kosten" in prompt
+        assert "Orderkosten" in prompt or "orderkosten" in prompt
         assert "#0e9f6e" in prompt  # Marken-Akzent steckt drin
         assert ar in ("1:1", "16:9", "9:16")
 

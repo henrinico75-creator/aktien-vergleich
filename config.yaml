@@ -1,12 +1,12 @@
 # Zentrale Konfiguration für den Seitengenerator.
 
-site_name: "Aktien-Kosten"
+site_name: "Orderkosten"
 tagline: "Wo kaufe ich welche Aktie am günstigsten?"
 
 # Vollständige URL für sitemap.xml und canonical. Auf Vercel über die
-# Umgebungsvariable SITE_BASE_URL setzen (Projekt-Domain oder eigene Domain).
+# Umgebungsvariable SITE_BASE_URL setzen, sobald die Domain verbunden ist.
 # Der Wert hier ist nur der lokale Vorgabewert.
-base_url: "https://aktien-vergleich.vercel.app"
+base_url: "https://orderkosten.de"
 
 # Pfad-Prefix für Links und Assets INNERHALB der Seiten. Vercel liefert von
 # der Domain-Wurzel aus, daher leer. Nur für einen Betrieb unter einem

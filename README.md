@@ -1,15 +1,19 @@
-# aktien-vergleich
+# Orderkosten
 
-Statisch generierte Info-Website: pro Aktie eine Seite mit der Frage "Wo kaufe ich
-diese Aktie am guenstigsten?" plus Kennzahlen, Dividendendaten und aktuellen
-Aussagen des Managements. Einnahmen ueber Broker-Affiliate und spaeter Display-Ads.
+Statisch generierte Info-Website: pro Aktie und ETF eine Seite mit der Frage
+"Wo kaufe ich das am guenstigsten?" plus Kennzahlen, Dividendendaten und
+aktuellen Aussagen des Managements. Einnahmen ueber Broker-Affiliate und
+spaeter Display-Ads.
 
-Kein Bestandteil des `Finanzen`-Repos. Anderes Ziel, anderer Rechtsrahmen.
+Repo-Slug: `aktien-vergleich`. Kein Bestandteil des `Finanzen`-Repos.
+Anderes Ziel, anderer Rechtsrahmen.
 
 ## Status
 
-Prototyp, gehostet auf Vercel. Der Seitengenerator laeuft, Broker-Gebuehren
-und der Aktien- und ETF-Datensatz sind Startwerte und noch nicht geprueft.
+Prototyp. Produktname **Orderkosten**, Zieldomain `orderkosten.de` (noch nicht
+registriert/verbunden). Gehostet auf Vercel. Der Seitengenerator laeuft,
+Broker-Gebuehren und der Aktien- und ETF-Datensatz sind Startwerte und noch
+nicht geprueft.
 
 ## Stack
 
@@ -89,11 +93,14 @@ Einmalig, im Vercel-Konto:
 1. **New Project** -> GitHub-Repo `aktien-vergleich` importieren.
 2. Framework Preset **Other**. Build Command und Output Directory kommen aus
    `vercel.json` (Build: `src.build`, Output: `dist`).
-3. **Environment Variables** setzen:
-   - `SITE_BASE_URL` = die Vercel-Domain oder die eigene Domain
-     (`https://…`, ohne Schraegstrich am Ende)
+3. **Domain** `orderkosten.de` (und `orderkosten.com`) registrieren, in
+   Vercel -> Settings -> Domains hinzufuegen, DNS laut Vercel-Anleitung
+   setzen. `orderkosten.com` als Redirect auf `orderkosten.de`.
+4. **Environment Variables** setzen:
+   - `SITE_BASE_URL` = `https://orderkosten.de` (ohne Schraegstrich am Ende);
+     bis die Domain live ist die Vercel-Domain eintragen
    - `SITE_PATH_PREFIX` leer lassen
-4. Deploy. Danach loest jeder Push auf `main` automatisch einen Deploy aus.
+5. Deploy. Danach loest jeder Push auf `main` automatisch einen Deploy aus.
 
 Der Vercel-Build ruft `src.fetch` fuer frische Kurse und dann `src.build`.
 `src.summarize` (eigene Meldungs-Zusammenfassungen) laeuft NICHT im Build,
@@ -103,8 +110,8 @@ versionieren und per Cron-Action zu aktualisieren.
 
 Taeglicher Neubau fuer frische Kurse:
 
-5. Vercel -> Settings -> Git -> **Deploy Hooks** anlegen, URL kopieren.
-6. GitHub -> Settings -> Secrets and variables -> Actions -> Secret
+6. Vercel -> Settings -> Git -> **Deploy Hooks** anlegen, URL kopieren.
+7. GitHub -> Settings -> Secrets and variables -> Actions -> Secret
    `VERCEL_DEPLOY_HOOK` = diese URL. `refresh.yml` ruft sie taeglich auf.
 
 GitHub Pages wird nicht mehr verwendet (Workflow entfernt). Falls Pages im

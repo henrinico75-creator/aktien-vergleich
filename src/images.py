@@ -36,7 +36,7 @@ API_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 # Gemeinsame Bildsprache. Steckt in jedem Prompt, damit alle Bilder zur Seite
 # passen. Bewusst nuechtern: die Seite ist ein Kostenvergleich, kein Hype.
 BRAND = (
-    "Brand: Aktien-Kosten, a cost-comparison tool for German retail investors "
+    "Brand: Orderkosten, a cost-comparison tool for German retail investors "
     "that shows at which broker a given stock or ETF is cheapest to buy. "
     "Voice: precise, quiet, trustworthy, serious. Never flashy, never hype. "
     "Palette: emerald green #0e9f6e as the single accent, near-black ink "
@@ -117,7 +117,7 @@ def logo_jobs() -> list[tuple[str, str, str | None]]:
     """(Dateiname, Prompt, Seitenverhaeltnis)."""
     base = (
         f"{BRAND}\n\n"
-        "Task: a compact logo mark plus the wordmark \"Aktien-Kosten\". "
+        "Task: a compact logo mark plus the wordmark \"Orderkosten\". "
         "The mark is three flush-left horizontal bars stacked with equal gaps, "
         "each shorter than the one above (descending right edge, like a small "
         "ranked bar chart trending down). Top bar ink at full strength, middle "
@@ -169,7 +169,7 @@ def marketing_jobs(date: str) -> list[tuple[str, str, str]]:
         "any figures from the brief below; do not add your own numbers or "
         "claims. Put a short German headline (max 7 words) and, if the brief "
         "gives one, a single supporting line. Leave room at the bottom for a "
-        "small \"aktien-kosten\" wordmark. Keep it calm and legible.\n\n"
+        "small \"orderkosten\" wordmark. Keep it calm and legible.\n\n"
         f"--- Wochenthema ---\n{plan or '(kein plan.md)'}\n\n"
         f"--- Instagram-Entwurf ---\n{insta or '(kein instagram.md)'}"
     )

@@ -5,10 +5,10 @@ Baut auch ohne data/generated/ (dann Platzhalter statt echter Zahlen).
 
 Verlinkung:
     cfg["path_prefix"]  Pfad-Prefix fuer Links und Assets in den Seiten.
-                        Lokal leer, auf GitHub Project Pages z. B. /aktien-vergleich.
+                        Auf Vercel leer (Auslieferung von der Domain-Wurzel).
                         Override ueber Umgebungsvariable SITE_PATH_PREFIX.
     cfg["base_url"]     vollstaendige URL (Origin + Pfad) fuer sitemap und canonical.
-                        Override ueber SITE_BASE_URL.
+                        Auf Vercel ueber SITE_BASE_URL auf die verbundene Domain.
 """
 from __future__ import annotations
 
